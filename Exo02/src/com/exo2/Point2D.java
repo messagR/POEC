@@ -20,7 +20,7 @@ public class Point2D {
 
 	/**
 	 * @param x
-	 * 			@param y
+	 * @param y
 	 */
 	public Point2D(int vX, int vY) {
 		this.setX(vX);
@@ -42,7 +42,6 @@ public class Point2D {
 	public void setX(int x) {
 		this.x = x;
 	}
-
 
 	/**
 	 * @return the y
@@ -71,11 +70,12 @@ public class Point2D {
 	 */
 	public void afficher() {
 		System.out.println(this.toString());
+		// jj
 	}
 
 	/**
 	 * @param dX
-	 * 			@param dY
+	 * @param dY
 	 */
 	public void translater(int dX, int dY) {
 		this.setX(this.getX() + dX);
