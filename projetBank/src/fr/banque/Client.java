@@ -1,23 +1,21 @@
 package fr.banque;
 
-public class Client {
+public class Client extends Entite {
 
 	private String nom, prenom;
-	private int age, numClient;
+	private int age;
 	private Compte[] comptes;
 
 	public final static int NB_COMPTE_MAX = 5;
 
 	public Client() {
-		this("", "", 0, 0);
+		this("", "", 0);
 	}
 
-	public Client(String nom, String prenom, int age, int numClient) {
-		this.nom = nom;
-		this.prenom = prenom;
-		this.age = age;
-		this.numClient = numClient;
-		// this.comptes = new Compte[Client.NB_COMPTE_MAX];
+	public Client(String nom, String prenom, int age) {
+		this.setNom(nom);
+		this.setPrenom(prenom);
+		this.setAge(age);
 	}
 
 	/**
@@ -66,21 +64,6 @@ public class Client {
 	}
 
 	/**
-	 * @return the numero
-	 */
-	public int getNumClient() {
-		return this.numClient;
-	}
-
-	/**
-	 * @param numero
-	 *            the numero to set
-	 */
-	public void setNumClient(int numero) {
-		this.numClient = numero;
-	}
-
-	/**
 	 * @return the tableau
 	 */
 	public Compte[] getComptes() {
@@ -103,15 +86,16 @@ public class Client {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getName()).append(" [");
+		builder.append(super.toString());
+		builder.delete(builder.length() - 1, builder.length());
 		if (this.getNom() != null) {
-			builder.append("nom = ").append(this.getNom()).append(", ");
+			builder.append(", nom = ").append(this.getNom()).append(", ");
 		}
 		if (this.getPrenom() != null) {
 			builder.append("prenom = ").append(this.getPrenom()).append(", ");
 		}
 		builder.append("age = ").append(this.getAge()).append(", ");
-		builder.append("numero = ").append(this.getNumClient());
+		builder.append("numero client = ").append(this.getNumero());
 		if (this.getComptes() != null) {
 			builder.append(", ").append("comptes = ");
 			int i = 0;
@@ -134,7 +118,7 @@ public class Client {
 	}
 
 	// Méthodes (au moins):
-	public void ajouterCompte(Compte unCompte){
+	public void ajouterCompte(Compte unCompte) {
 		int i = 0;
 		if (this.comptes == null) {
 			this.comptes = new Compte[Client.NB_COMPTE_MAX];
@@ -154,12 +138,44 @@ public class Client {
 	public Compte getCompte(int numeroCompte) {
 		int i = 0;
 		while ((i < this.comptes.length) && (this.comptes[i] != null)) {
-			if (this.comptes[i].getNumCompte() == numeroCompte) {
+			if (this.comptes[i].getNumero() == numeroCompte) {
 				return this.comptes[i];
 			}
 			i++;
 		}
 		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#hashCode()
+	 */
+	// @Override
+	// public int hashCode() {
+	// if (this.getNumero() == -1) {
+	// return super.hashCode();
+	// }
+	// return (this.getClass().getName() + "_" + this.getNumero()).hashCode();
+	// }
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof Client){
+			return super.equals(obj);
+		}
+		return false;
 	}
 
 }

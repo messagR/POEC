@@ -1,30 +1,16 @@
 package fr.banque;
 
-public class Compte {
+public class Compte extends Entite {
 
-
-	private int numCompte;
 	private double solde;
 
-	public Compte(int numCompte, int solde) {
-		this.setNumCompte(numCompte);
+	public Compte() {
+		this(0);
+	}
+
+	public Compte(int solde) {
 		this.setSolde(solde);
 
-	}
-
-	/**
-	 * @return the numero
-	 */
-	public int getNumCompte() {
-		return this.numCompte;
-	}
-
-	/**
-	 * @param numCompte the numero to set
-	 */
-	// Faut-il rendre setNumero(unNumero) public ? oui
-	public void setNumCompte(int numCompte) {
-		this.numCompte = numCompte;
 	}
 
 	/**
@@ -35,7 +21,8 @@ public class Compte {
 	}
 
 	/**
-	 * @param solde the solde to set
+	 * @param solde
+	 *            the solde to set
 	 */
 	// Faut-il rendre setSolde(unSolde) public ? non
 	private void setSolde(double solde) {
@@ -50,8 +37,8 @@ public class Compte {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getName());
-		builder.append(" [numCompte = ").append(this.getNumCompte());
+		builder.append(super.toString());
+		builder.delete(builder.length() - 1, builder.length());
 		builder.append(", solde = ").append(this.getSolde()).append("]");
 		return builder.toString();
 	}
@@ -62,6 +49,38 @@ public class Compte {
 
 	public void retirer(double unMontant) {
 		this.setSolde(this.getSolde() - unMontant);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#hashCode()
+	 */
+	// @Override
+	// public int hashCode() {
+	// if (this.getNumero() == -1) {
+	// return super.hashCode();
+	// }
+	// return (this.getClass().getName() + "_" + this.getNumero()).hashCode();
+	// }
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof Compte) {
+			return super.equals(obj);
+		}
+		return false;
 	}
 
 }
