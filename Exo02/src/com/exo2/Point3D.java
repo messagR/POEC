@@ -33,10 +33,10 @@ public class Point3D extends Point2D {
 	 *
 	 * @see com.exo2.Point2D#afficher()
 	 */
-	@Override
-	public void afficher() {
-		super.afficher();
-	}
+//	@Override
+//	public void afficher() {
+//		super.afficher();
+//	}
 
 	/*
 	 * (non-Javadoc)
