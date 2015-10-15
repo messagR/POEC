@@ -1,10 +1,18 @@
-package com.exo;
+package com.exo.run;
 
-import com.exo.entite.Directeur;
-import com.exo.entite.Marchandise;
-import com.exo.entite.Passager;
-import com.exo.entite.Personne;
-import com.exo.entite.SuperAvion;
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.crypto.BadPaddingException;
+
+import com.exo.classe.Directeur;
+import com.exo.classe.Gens;
+import com.exo.classe.IPersonne;
+import com.exo.classe.Marchandise;
+import com.exo.classe.MonException;
+import com.exo.classe.Passager;
+import com.exo.classe.Personne;
+import com.exo.classe.SuperAvion;
 
 public class RunPersonne {
 
@@ -14,22 +22,41 @@ public class RunPersonne {
 	// @SuppressWarnings(value = { "null", "unused" })
 	public static void main(String[] args) {
 
-		Personne p31 = new Personne("Dupont", "Albert", 32);
-		Personne p32 = new Personne("Dupont", "Albert", 32);
+		IPersonne p31, p32;
+		p31 = new Personne("Dupont", "Albert", 32);
+		p32 = new Personne("Dupont", "Albert", 32);
+		System.out.println("-- A --");
+		try {
+			System.out.println("-- B --");
+			p31.setAge(55);
+			System.out.println("-- C --");
+			System.out.println("-- D --");
+		} catch (BadPaddingException | IOException | SQLException e) { // uniquement en Java8
+			// NE JAMAIS LAISSER UN CATCH SANS INSTRUCTION -> AU PIRE FAIRE UN
+			// LOG D'ERREUR
+			e.printStackTrace();
+		} catch (MonException e1) {
+			System.out.println("-- E --");
+			// e.printStackTrace();
+			System.out.println(e1.getMessage());
+		} finally {
+
+			System.out.println("Finally");
+		}
+		System.out.println("-- F --");
+		Directeur p33 = new Directeur("Dupont", "Albert", 32);
 		p31 = null;
 		System.out.println(p31 + "<-'' - toString()->" + p31.toString());
 		Class classeDeMonP1 = p31.getClass();
 		System.out.println(classeDeMonP1.getName() + "<-getName() - getSimpleName()->" + classeDeMonP1.getSimpleName());
 		int tab10[] = new int[5];
 		String tab11[] = new String[5];
-		System.out.println(tab10.getClass() + "<-tab10 - tab11->" +
-				tab11.getClass());
+		System.out.println(tab10.getClass() + "<-tab10 - tab11->" + tab11.getClass());
 		if (Personne.class == p31.getClass()) {
 			// pareil que Personne.class.equals(p31.getClass())
 			System.out.println("class ok ->" + Personne.class);
 		} else {
-			System.out.println("class ko : " + Personne.class + " - " +
-					p31.getClass());
+			System.out.println("class ko : " + Personne.class + " - " + p31.getClass());
 		}
 		if (p31 == p32) {
 			System.out.println("même objets");
@@ -47,6 +74,9 @@ public class RunPersonne {
 		} else {
 			System.out.println("p31.equals(d1) ko->" + p31 + " - " + d1);
 		}
+
+		IPersonne p34 = new Gens();
+
 		System.out.println(p31.hashCode());
 		System.out.println(p32.hashCode());
 		System.out.println(d1.hashCode());
@@ -54,7 +84,7 @@ public class RunPersonne {
 		long start = System.currentTimeMillis();
 		StringBuilder buff = new StringBuilder();
 		for (int i = 0; i < 50000; i++) {
-			Personne pLocal = new Personne("Dupont", "Albert", 25);
+			IPersonne pLocal = new Personne("Dupont", "Albert", 25);
 			buff.append("mon instance :").append(pLocal).append("\n");
 		}
 		System.out.println(buff.toString());
@@ -75,7 +105,7 @@ public class RunPersonne {
 		Passager p23 = avionPassager.decharger(2);
 		System.out.println(SuperAvion.TAILLE_DEFAULT);
 
-		Personne p1 = new Personne();
+		IPersonne p1 = new Personne();
 		p1.setNom("Dupont");
 		p1.setPrenom("Albert");
 		p1.afficher();
@@ -83,8 +113,12 @@ public class RunPersonne {
 		int y = 55;
 		int result = p1.inverser(x, y);
 		System.out.println("x(" + x + ") + y(" + y + ") = " + result);
-		Personne p2 = new Personne("Durand", "John", 33);
-		p2.inverser(p1);
+		IPersonne p2 = new Personne("Durand", "John", 33);
+		try {
+			p2.inverser(p1);
+		} catch (BadPaddingException | MonException | IOException | SQLException e) {
+			e.printStackTrace();
+		}
 		p2.afficher();
 		p1.afficher();
 		p1 = null;

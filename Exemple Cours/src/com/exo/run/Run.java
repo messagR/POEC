@@ -1,4 +1,4 @@
-package com.exo;
+package com.exo.run;
 
 public class Run {
 
@@ -7,6 +7,16 @@ public class Run {
 	// enlève les warnings de null pointer exception et de not used
 	// @SuppressWarnings(value = { "null", "unused" })
 	public static void main(String[] args) {
+
+		System.out.println("-- A --");
+		try {
+			Integer val = Integer.parseInt(null);
+			System.out.println(val);
+			;
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		System.out.println("-- B --");
 
 		int j = -1;
 		toto: do {

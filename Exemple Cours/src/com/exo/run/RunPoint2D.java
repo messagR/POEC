@@ -1,8 +1,8 @@
-package com.exo;
+package com.exo.run;
 
-import com.exo.entite.Point2D;
-import com.exo.entite.Point3D;
-import com.exo.entite.Point3Dv2;
+import com.exo.classe.Point2D;
+import com.exo.classe.Point3D;
+import com.exo.classe.Point3Dv2;
 
 public class RunPoint2D {
 

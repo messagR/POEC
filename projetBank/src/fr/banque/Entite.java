@@ -1,6 +1,6 @@
 package fr.banque;
 
-public abstract class Entite {
+class Entite implements IEntite {
 
 	private int numero;
 
@@ -13,25 +13,16 @@ public abstract class Entite {
 		this.setNumero(numero);
 	}
 
-	/**
-	 * @return the numero
-	 */
+	@Override
 	public int getNumero() {
 		return this.numero;
 	}
 
-	/**
-	 * @param numero
-	 */
+	@Override
 	public void setNumero(int num) {
 		this.numero = num;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -40,11 +31,6 @@ public abstract class Entite {
 		return builder.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		if (this.getNumero() == -1) {
@@ -53,11 +39,6 @@ public abstract class Entite {
 		return (this.getClass().getName() + "_" + this.getNumero()).hashCode();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

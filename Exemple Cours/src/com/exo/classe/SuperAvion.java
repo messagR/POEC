@@ -1,4 +1,4 @@
-package com.exo.entite;
+package com.exo.classe;
 
 public class SuperAvion<T> {
 

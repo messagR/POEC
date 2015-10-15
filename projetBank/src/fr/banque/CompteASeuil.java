@@ -1,6 +1,6 @@
 package fr.banque;
 
-public class CompteASeuil extends Compte {
+class CompteASeuil extends Compte implements ICompteASeuil {
 
 	private double seuil;
 
@@ -8,23 +8,47 @@ public class CompteASeuil extends Compte {
 		super();
 	}
 
-	public CompteASeuil(int solde) {
+	public CompteASeuil(double solde) {
 		super(solde);
 	}
 
-	/**
-	 * @return the seuil
-	 */
+	public CompteASeuil(double solde, double seuil) {
+		super(solde);
+		try {
+			this.setSeuil(seuil);
+		} catch (BanqueException e) {
+			try {
+				this.setSeuil(0);
+			} catch (BanqueException e1) {
+				this.seuil = 0;
+			}
+		}
+	}
+
+	@Override
 	public double getSeuil() {
 		return this.seuil;
 	}
 
-	/**
-	 * @param seuil
-	 *            the seuil to set
-	 */
-	public void setSeuil(double seuil) {
-		this.seuil = seuil;
+	@Override
+	public void setSeuil(double seuil) throws BanqueException {
+		if (super.getSolde() < seuil) {
+			throw new BanqueException(
+					"Solde insuffisant : modification seuil impossible pour le compte n°" + this.getNumero()
+					+ " avec un seuil de " + seuil);
+		} else {
+			this.seuil = seuil;
+		}
+	}
+
+	@Override
+	public void retirer(double uneValeur) throws BanqueException {
+		if (this.getSeuil() <= (this.getSolde() - uneValeur)) {
+			super.retirer(uneValeur);
+		}
+		else {
+			throw new BanqueException("Solde insuffisant après retrait : retrait impossible");
+		}
 	}
 
 	@Override
@@ -35,15 +59,5 @@ public class CompteASeuil extends Compte {
 		builder.append(", seuil = ").append(this.getSeuil()).append("]");
 		return builder.toString();
 
-	}
-
-	@Override
-	public void retirer(double uneValeur) {
-		if (this.getSeuil() <= (this.getSolde() - uneValeur)) {
-			super.retirer(uneValeur);
-		}
-		else {
-			System.out.println("Seuil atteint");
-		}
 	}
 }

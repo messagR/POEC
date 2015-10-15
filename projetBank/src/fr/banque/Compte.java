@@ -1,39 +1,46 @@
 package fr.banque;
 
-public class Compte extends Entite {
+/**
+ * visu package pour la factory
+ */
+class Compte extends Entite implements ICompte {
 
 	private double solde;
 
-	public Compte() {
+	/**
+	 * visu package pour la factory
+	 */
+	Compte() {
 		this(0);
 	}
 
-	public Compte(int solde) {
+	/**
+	 * visu package pour la factory
+	 */
+	Compte(double solde) {
 		this.setSolde(solde);
 
 	}
 
-	/**
-	 * @return the solde
-	 */
+	@Override
 	public double getSolde() {
 		return this.solde;
 	}
 
-	/**
-	 * @param solde
-	 *            the solde to set
-	 */
-	// Faut-il rendre setSolde(unSolde) public ? non
 	private void setSolde(double solde) {
 		this.solde = solde;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
+	public void ajouter(double unMontant) {
+		this.setSolde(this.getSolde() + unMontant);
+	}
+
+	@Override
+	public void retirer(double unMontant) throws BanqueException {
+		this.setSolde(this.getSolde() - unMontant);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -43,32 +50,6 @@ public class Compte extends Entite {
 		return builder.toString();
 	}
 
-	public void ajouter(double unMontant) {
-		this.setSolde(this.getSolde() + unMontant);
-	}
-
-	public void retirer(double unMontant) {
-		this.setSolde(this.getSolde() - unMontant);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
-	// @Override
-	// public int hashCode() {
-	// if (this.getNumero() == -1) {
-	// return super.hashCode();
-	// }
-	// return (this.getClass().getName() + "_" + this.getNumero()).hashCode();
-	// }
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

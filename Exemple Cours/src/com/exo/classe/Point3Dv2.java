@@ -1,4 +1,4 @@
-package com.exo.entite;
+package com.exo.classe;
 
 public class Point3Dv2 {
 
@@ -18,7 +18,7 @@ public class Point3Dv2 {
 	/**
 	 * @return
 	 * @deprecated
-	 * @see com.exo.entite.Point2D#getXx()
+	 * @see com.exo.classe.Point2D#getXx()
 	 */
 	@Deprecated
 	public int getXx() {
@@ -27,7 +27,7 @@ public class Point3Dv2 {
 
 	/**
 	 * @param x
-	 * @see com.exo.entite.Point2D#setXx(int)
+	 * @see com.exo.classe.Point2D#setXx(int)
 	 */
 	public void setXx(int x) {
 		this.p.setXx(x);
@@ -35,7 +35,7 @@ public class Point3Dv2 {
 
 	/**
 	 * @param y
-	 * @see com.exo.entite.Point2D#setY(int)
+	 * @see com.exo.classe.Point2D#setY(int)
 	 */
 	public void setY(int y) {
 		this.p.setY(y);
@@ -59,7 +59,7 @@ public class Point3Dv2 {
 	/**
 	 * @param dX
 	 * @param dY
-	 * @see com.exo.entite.Point2D#translater(int, int)
+	 * @see com.exo.classe.Point2D#translater(int, int)
 	 */
 	public void translater(int dX, int dY, int dZ) {
 		this.p.translater(dX, dY);
