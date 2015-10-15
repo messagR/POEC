@@ -25,11 +25,11 @@ public class Personne implements IPersonne {
 	}
 
 	public Personne() {
-		this("", "");
+		this(" ", " ");
 	}
 
 	public Personne(String nom, String prenom) {
-		this(nom == null ? "" : nom, prenom == null ? "" : prenom, 0);
+		this(nom == null ? " " : nom, prenom == null ? " " : prenom, 0);
 	}
 
 	public Personne(String nom, String prenom, int age) {
