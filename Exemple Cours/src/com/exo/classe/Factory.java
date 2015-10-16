@@ -1,8 +1,4 @@
-package fr.banque;
-
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
+package com.exo.classe;
 
 public final class Factory {
 
@@ -91,15 +87,7 @@ public final class Factory {
 		case 2:
 			type = (Class) args[0];
 			solde = (Double) args[1];
-			if (type == ICompte.class) {
-				compte = new Compte();
-			} else if (type == ICompteRemunere.class) {
-				compte = new CompteRemunere();
-			} else if (type == ICompteASeuil.class) {
-				compte = new CompteASeuil();
-			} else if (type == ICompteASeuilRemunere.class) {
-				compte = new CompteASeuilRemunere();
-			}
+			compte = new Compte(solde);
 			break;
 		case 3:
 			type = (Class) args[0];
@@ -113,13 +101,6 @@ public final class Factory {
 					throw new BanqueException("Solde insuffisant : creation de compte impossible");
 				} else {
 					compte = new CompteASeuil(solde, seuil);
-				}
-			} else if (type == ICompteASeuilRemunere.class) {
-				seuil = (Double) args[2];
-				if (solde < seuil) {
-					throw new BanqueException("Solde insuffisant : creation de compte impossible");
-				} else {
-					compte = new CompteASeuilRemunere(solde, seuil);
 				}
 			}
 			break;
@@ -157,8 +138,7 @@ public final class Factory {
 
 		private String nom, prenom;
 		private int age;
-		// private List<ICompte> comptes;
-		private Map<Integer, ICompte> comptes;
+		private ICompte[] comptes;
 
 		public final static int NB_COMPTE_MAX = 5;
 
@@ -210,48 +190,42 @@ public final class Factory {
 
 		@Override
 		public ICompte[] getComptes() {
-			ICompte[] comptes = new ICompte[ClientSupprime.NB_COMPTE_MAX];
-			// return this.comptes.toArray(comptes);
-			return this.comptes.values().toArray(comptes);
+			return this.comptes;
 		}
 
 		@Override
 		public void setComptes(ICompte[] comptes) {
-			// this.comptes = Arrays.asList(comptes);
-			int i = 0;
-			while (i < comptes.length) {
-				if (comptes[i] != null) {
-					// this.comptes.add(comptes[i]);
-					this.comptes.put(comptes[i].getNumero(), comptes[i]);
-				}
-				i++;
-			}
+			this.comptes = comptes;
 		}
 
 		@Override
 		public void ajouterCompte(ICompte unCompte) throws BanqueException {
+			int i = 0;
 			if (this.comptes == null) {
-				//				this.comptes = new ArrayList<ICompte>();
-				this.comptes = new Hashtable<Integer, ICompte>();
+				this.comptes = new ICompte[Client.NB_COMPTE_MAX];
 			}
-			if (Client.NB_COMPTE_MAX == this.comptes.size()) {
+			while (i < this.comptes.length) {
+				if (this.comptes[i] == null) {
+					this.comptes[i] = unCompte;
+					break;
+				}
+				i++;
+			}
+			if (i == this.comptes.length) {
 				throw new BanqueException("Nombre de comptes maximum atteint pour le client n°" + this.getNumero());
-			} else {
-				// this.comptes.add(unCompte);
-				this.comptes.put(unCompte.getNumero(), unCompte);
 			}
 		}
 
 		@Override
 		public ICompte getCompte(int numeroCompte) {
-			// Iterator iterCompte = this.comptes.iterator();
-			// while (iterCompte.hasNext()) {
-			// ICompte compte = iterCompte.next();
-			// if (compte.getNumero() == numeroCompte) {
-			// return compte;
-			// }
-			// }
-			return this.comptes.get(numeroCompte);
+			int i = 0;
+			while ((i < this.comptes.length) && (this.comptes[i] != null)) {
+				if (this.comptes[i].getNumero() == numeroCompte) {
+					return this.comptes[i];
+				}
+				i++;
+			}
+			return null;
 		}
 
 		@Override
@@ -268,15 +242,19 @@ public final class Factory {
 			builder.append("age = ").append(this.getAge()).append("]");
 			if (this.getComptes() != null) {
 				builder.append("\n         | ").append("comptes = ");
-				// Iterator iterCompte = this.comptes.iterator();
-				Iterator<ICompte> iterCompte = this.comptes.values().iterator();
-				while (iterCompte.hasNext()) {
-					ICompte compte = iterCompte.next();
-					builder.append(compte.toString().split(" ", 2)[1]);
-					if (iterCompte.hasNext()) {
+				int i = 0;
+				while (i < this.comptes.length) {
+					if (this.comptes[i] == null) {
+						break;
+					}
+					if (i > 0) {
 						builder.append(", ");
 					}
+					builder.append(this.comptes[i].toString().split(" ", 2)[1]);
+
+					i++;
 				}
+
 			}
 			return builder.toString();
 		}

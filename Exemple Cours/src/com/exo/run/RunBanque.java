@@ -1,14 +1,14 @@
-package fr.banque.run;
+package com.exo.run;
 
-import fr.banque.BanqueException;
-import fr.banque.Factory;
-import fr.banque.IClient;
-import fr.banque.ICompte;
-import fr.banque.ICompteASeuil;
-import fr.banque.ICompteASeuilRemunere;
-import fr.banque.ICompteRemunere;
+import com.exo.classe.BanqueException;
+import com.exo.classe.Factory;
+import com.exo.classe.IClient;
+import com.exo.classe.ICompte;
+import com.exo.classe.ICompteASeuil;
+import com.exo.classe.ICompteASeuilRemunere;
+import com.exo.classe.ICompteRemunere;
 
-public class Run {
+public class RunBanque {
 
 	public static void main(String[] args) {
 
@@ -19,19 +19,18 @@ public class Run {
 		listeClient[2] = f.creerClient("DURANT", "Paul", 30);
 		listeClient[3] = f.creerClient("DURAND", "Paula", 35);
 
-		ICompte compte = null;
-		ICompteRemunere compteRemunere = null;
-		ICompteASeuil compteASeuil = null;
-		ICompteASeuilRemunere compteASeuilRemunere = null;
+		ICompte compte;
+		ICompteRemunere compteRemunere;
+		ICompteASeuil compteASeuil;
+		ICompteASeuilRemunere compteASeuilRemunere;
 		try {
 			compte = f.creerCompte();
-			listeClient[0].ajouterCompte(compte);
 			compte.ajouter(100d);
+			listeClient[0].ajouterCompte(compte);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compte = null;
 		try {
 			compte = f.creerCompte(ICompte.class, 100d);
 			listeClient[0].ajouterCompte(compte);
@@ -39,26 +38,23 @@ public class Run {
 			e1.printStackTrace();
 		}
 
-		compteRemunere = null;
 		try {
 			compteRemunere = (ICompteRemunere) f.creerCompte(ICompteRemunere.class);
-			listeClient[0].ajouterCompte(compteRemunere);
 			compteRemunere.ajouter(100d);
 			compteRemunere.setTaux(0.2);
+			listeClient[0].ajouterCompte(compteRemunere);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteRemunere = null;
 		try {
 			compteRemunere = (ICompteRemunere) f.creerCompte(ICompteRemunere.class, 100d);
-			listeClient[0].ajouterCompte(compteRemunere);
 			compteRemunere.setTaux(0.4);
+			listeClient[0].ajouterCompte(compteRemunere);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteRemunere = null;
 		try {
 			compteRemunere = (ICompteRemunere) f.creerCompte(ICompteRemunere.class, 100d, 0.6);
 			listeClient[0].ajouterCompte(compteRemunere);
@@ -66,7 +62,6 @@ public class Run {
 			e1.printStackTrace();
 		}
 
-		compte = null;
 		try {
 			compte = f.creerCompte(ICompte.class);
 			listeClient[0].ajouterCompte(compte);
@@ -74,45 +69,40 @@ public class Run {
 			e1.printStackTrace();
 		}
 
-		compteASeuil = null;
 		try {
 			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class);
-			listeClient[1].ajouterCompte(compteASeuil);
 			compteASeuil.ajouter(200d);
 			compteASeuil.setSeuil(10d);
+			listeClient[1].ajouterCompte(compteASeuil);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteASeuil = null;
 		try {
 			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class);
-			listeClient[1].ajouterCompte(compteASeuil);
 			compteASeuil.ajouter(100d);
 			compteASeuil.setSeuil(150d);
+			listeClient[1].ajouterCompte(compteASeuil);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteASeuil = null;
 		try {
 			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d);
-			listeClient[1].ajouterCompte(compteASeuil);
 			compteASeuil.setSeuil(10d);
+			listeClient[1].ajouterCompte(compteASeuil);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteASeuil = null;
 		try {
 			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d);
-			listeClient[1].ajouterCompte(compteASeuil);
 			compteASeuil.setSeuil(150d);
+			listeClient[1].ajouterCompte(compteASeuil);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteASeuil = null;
 		try {
 			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d, 150d);
 			listeClient[2].ajouterCompte(compteASeuil);
@@ -120,7 +110,6 @@ public class Run {
 			e1.printStackTrace();
 		}
 
-		compteASeuil = null;
 		try {
 			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d, 10d);
 			listeClient[2].ajouterCompte(compteASeuil);
@@ -128,65 +117,58 @@ public class Run {
 			e1.printStackTrace();
 		}
 
-		compteASeuilRemunere = null;
 		try {
 			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class);
-			listeClient[2].ajouterCompte(compteASeuilRemunere);
 			compteASeuilRemunere.ajouter(100d);
 			compteASeuilRemunere.setSeuil(150d);
 			compteASeuilRemunere.setTaux(0.2);
+			listeClient[2].ajouterCompte(compteASeuilRemunere);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteASeuilRemunere = null;
 		try {
 			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 100d);
-			listeClient[3].ajouterCompte(compteASeuilRemunere);
 			compteASeuilRemunere.setSeuil(150d);
 			compteASeuilRemunere.setTaux(0.2);
+			listeClient[3].ajouterCompte(compteASeuilRemunere);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteASeuilRemunere = null;
 		try {
 			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 100d, 150d);
-			listeClient[3].ajouterCompte(compteASeuilRemunere);
 			compteASeuilRemunere.setTaux(0.2);
+			listeClient[3].ajouterCompte(compteASeuilRemunere);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
-		compteASeuilRemunere = null;
 		try {
 			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 100d, 150d, 0.2);
-			listeClient[3].ajouterCompte(compteASeuilRemunere);
 			listeClient[3].ajouterCompte(compteASeuilRemunere);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
 		}
 
 		for (IClient client : listeClient) {
-			if (client != null) {
-				System.out.println("Client n°" + client.getNumero());
-				if (client.getComptes() != null) {
-					for (ICompte compteClient : client.getComptes()) {
-						if (compteClient != null) {
-							System.out.println(
-									"    " + compteClient.getClass().getSimpleName() + " n°" + compteClient.getNumero());
-							try {
-								compteClient.retirer(100);
-								System.out.println("         retrait effectue");
-							} catch (BanqueException e) {
-								e.printStackTrace();
-							}
-							compteClient.ajouter(100);
-							System.out.println("         ajout effectue");
-							if (compteClient instanceof ICompteRemunere) {
-								ICompteRemunere cptRem = (ICompteRemunere) compteClient;
-								System.out.println("         " + cptRem.verserInterets());
-							}
+			System.out.println("Client n°" + client.getNumero());
+			if (client.getComptes() != null) {
+				for (ICompte compteClient : client.getComptes()) {
+					if (compteClient != null) {
+						System.out.println(
+								"    " + compteClient.getClass().getSimpleName() + " n°" + compteClient.getNumero());
+						try {
+							compteClient.retirer(100);
+							System.out.println("         retrait effectue");
+						} catch (BanqueException e) {
+							e.printStackTrace();
+						}
+						compteClient.ajouter(100);
+						System.out.println("         ajout effectue");
+						if (compteClient instanceof ICompteRemunere) {
+							ICompteRemunere cptRem = (ICompteRemunere) compteClient;
+							System.out.println("         " + cptRem.verserInterets());
 						}
 					}
 				}
