@@ -9,12 +9,12 @@ class CompteRemunere extends Compte implements ICompteRemunere {
 		super();
 	}
 
-	public CompteRemunere(double solde) {
-		super(solde);
+	public CompteRemunere(int id, String libelle, double solde) {
+		super(id, libelle, solde);
 	}
 
-	public CompteRemunere(double solde, double taux) {
-		super(solde);
+	public CompteRemunere(int id, String libelle, double solde, double taux) {
+		super(id, libelle, solde);
 		this.setTaux(taux);
 	}
 

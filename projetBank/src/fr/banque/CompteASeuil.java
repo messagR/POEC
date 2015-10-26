@@ -8,12 +8,12 @@ class CompteASeuil extends Compte implements ICompteASeuil {
 		super();
 	}
 
-	public CompteASeuil(double solde) {
-		super(solde);
+	public CompteASeuil(int id, String libelle, double solde) {
+		super(id, libelle, solde);
 	}
 
-	public CompteASeuil(double solde, double seuil) {
-		super(solde);
+	public CompteASeuil(int id, String libelle, double solde, double seuil) {
+		super(id, libelle, solde);
 		try {
 			this.setSeuil(seuil);
 		} catch (BanqueException e) {

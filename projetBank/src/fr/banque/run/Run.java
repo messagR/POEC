@@ -14,10 +14,10 @@ public class Run {
 
 		Factory f = Factory.getInstance();
 		IClient[] listeClient = new IClient[5];
-		listeClient[0] = f.creerClient("DUPONT", "Jean", 20);
-		listeClient[1] = f.creerClient("DUPOND", "Jeanne", 25);
-		listeClient[2] = f.creerClient("DURANT", "Paul", 30);
-		listeClient[3] = f.creerClient("DURAND", "Paula", 35);
+		listeClient[0] = f.creerClient(1, "DUPONT", "Jean", 20);
+		listeClient[1] = f.creerClient(2, "DUPOND", "Jeanne", 25);
+		listeClient[2] = f.creerClient(3, "DURANT", "Paul", 30);
+		listeClient[3] = f.creerClient(4, "DURAND", "Paula", 35);
 
 		ICompte compte = null;
 		ICompteRemunere compteRemunere = null;
@@ -33,7 +33,7 @@ public class Run {
 
 		compte = null;
 		try {
-			compte = f.creerCompte(ICompte.class, 100d);
+			compte = f.creerCompte(ICompte.class, 1, "", 100d);
 			listeClient[0].ajouterCompte(compte);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
@@ -51,7 +51,7 @@ public class Run {
 
 		compteRemunere = null;
 		try {
-			compteRemunere = (ICompteRemunere) f.creerCompte(ICompteRemunere.class, 100d);
+			compteRemunere = (ICompteRemunere) f.creerCompte(ICompteRemunere.class, 1, "", 100d);
 			listeClient[0].ajouterCompte(compteRemunere);
 			compteRemunere.setTaux(0.4);
 		} catch (BanqueException e1) {
@@ -60,7 +60,7 @@ public class Run {
 
 		compteRemunere = null;
 		try {
-			compteRemunere = (ICompteRemunere) f.creerCompte(ICompteRemunere.class, 100d, 0.6);
+			compteRemunere = (ICompteRemunere) f.creerCompte(ICompteRemunere.class, 1, "", 100d, 0.6);
 			listeClient[0].ajouterCompte(compteRemunere);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
@@ -96,7 +96,7 @@ public class Run {
 
 		compteASeuil = null;
 		try {
-			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d);
+			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 1, "", 100d);
 			listeClient[1].ajouterCompte(compteASeuil);
 			compteASeuil.setSeuil(10d);
 		} catch (BanqueException e1) {
@@ -105,7 +105,7 @@ public class Run {
 
 		compteASeuil = null;
 		try {
-			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d);
+			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 1, "", 100d);
 			listeClient[1].ajouterCompte(compteASeuil);
 			compteASeuil.setSeuil(150d);
 		} catch (BanqueException e1) {
@@ -114,7 +114,7 @@ public class Run {
 
 		compteASeuil = null;
 		try {
-			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d, 150d);
+			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 1, "", 100d, 150d);
 			listeClient[2].ajouterCompte(compteASeuil);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
@@ -122,7 +122,7 @@ public class Run {
 
 		compteASeuil = null;
 		try {
-			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 100d, 10d);
+			compteASeuil = (ICompteASeuil) f.creerCompte(ICompteASeuil.class, 1, "", 100d, 10d);
 			listeClient[2].ajouterCompte(compteASeuil);
 		} catch (BanqueException e1) {
 			e1.printStackTrace();
@@ -141,7 +141,7 @@ public class Run {
 
 		compteASeuilRemunere = null;
 		try {
-			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 100d);
+			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 1, "", 100d);
 			listeClient[3].ajouterCompte(compteASeuilRemunere);
 			compteASeuilRemunere.setSeuil(150d);
 			compteASeuilRemunere.setTaux(0.2);
@@ -151,7 +151,8 @@ public class Run {
 
 		compteASeuilRemunere = null;
 		try {
-			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 100d, 150d);
+			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 1, "", 100d,
+					150d);
 			listeClient[3].ajouterCompte(compteASeuilRemunere);
 			compteASeuilRemunere.setTaux(0.2);
 		} catch (BanqueException e1) {
@@ -160,7 +161,8 @@ public class Run {
 
 		compteASeuilRemunere = null;
 		try {
-			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 100d, 150d, 0.2);
+			compteASeuilRemunere = (ICompteASeuilRemunere) f.creerCompte(ICompteASeuilRemunere.class, 1, "", 100d, 150d,
+					0.2);
 			listeClient[3].ajouterCompte(compteASeuilRemunere);
 			listeClient[3].ajouterCompte(compteASeuilRemunere);
 		} catch (BanqueException e1) {

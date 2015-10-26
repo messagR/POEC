@@ -8,16 +8,16 @@ class CompteASeuilRemunere extends CompteASeuil implements ICompteRemunere, ICom
 		super();
 	}
 
-	public CompteASeuilRemunere(double solde) {
-		super(solde);
+	public CompteASeuilRemunere(int id, String libelle, double solde) {
+		super(id, libelle, solde);
 	}
 
-	public CompteASeuilRemunere(double solde, double seuil) {
-		super(solde, seuil);
+	public CompteASeuilRemunere(int id, String libelle, double solde, double seuil) {
+		super(id, libelle, solde, seuil);
 	}
 
-	public CompteASeuilRemunere(double solde, double seuil, double taux) {
-		super(solde, seuil);
+	public CompteASeuilRemunere(int id, String libelle, double solde, double seuil, double taux) {
+		super(id, libelle, solde, seuil);
 		this.setTaux(taux);
 	}
 

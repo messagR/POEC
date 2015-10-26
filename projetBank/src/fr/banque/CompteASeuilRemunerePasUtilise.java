@@ -1,23 +1,23 @@
 package fr.banque;
 
-class CompteASeuilRemunere2 extends CompteASeuil implements ICompteRemunere {
+class CompteASeuilRemunerePasUtilise extends CompteASeuil implements ICompteRemunere {
 
 	private ICompteRemunere compteRemmunere;
 
-	public CompteASeuilRemunere2() {
+	public CompteASeuilRemunerePasUtilise() {
 		super();
 	}
 
-	public CompteASeuilRemunere2(double solde) {
-		super(solde);
+	public CompteASeuilRemunerePasUtilise(int id, String libelle, double solde) {
+		super(id, libelle, solde);
 	}
 
-	public CompteASeuilRemunere2(double solde, double seuil) {
-		super(solde, seuil);
+	public CompteASeuilRemunerePasUtilise(int id, String libelle, double solde, double seuil) {
+		super(id, libelle, solde, seuil);
 	}
 
-	public CompteASeuilRemunere2(double solde, double seuil, double taux) {
-		super(solde, seuil);
+	public CompteASeuilRemunerePasUtilise(int id, String libelle, double solde, double seuil, double taux) {
+		super(id, libelle, solde, seuil);
 		this.setTaux(taux);
 	}
 
