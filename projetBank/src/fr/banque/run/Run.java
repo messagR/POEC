@@ -14,10 +14,10 @@ public class Run {
 
 		Factory f = Factory.getInstance();
 		IClient[] listeClient = new IClient[5];
-		listeClient[0] = f.creerClient(1, "DUPONT", "Jean", 20);
-		listeClient[1] = f.creerClient(2, "DUPOND", "Jeanne", 25);
-		listeClient[2] = f.creerClient(3, "DURANT", "Paul", 30);
-		listeClient[3] = f.creerClient(4, "DURAND", "Paula", 35);
+		listeClient[0] = f.creerClient(1, "DUPONT", "Jean", 20, null, null, null, null, 0, 0, null);
+		listeClient[1] = f.creerClient(2, "DUPOND", "Jeanne", 25, null, null, null, null, 0, 0, null);
+		listeClient[2] = f.creerClient(3, "DURANT", "Paul", 30, null, null, null, null, 0, 0, null);
+		listeClient[3] = f.creerClient(4, "DURAND", "Paula", 35, null, null, null, null, 0, 0, null);
 
 		ICompte compte = null;
 		ICompteRemunere compteRemunere = null;
