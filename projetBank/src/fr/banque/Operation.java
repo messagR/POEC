@@ -1,13 +1,20 @@
 package fr.banque;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * visu package pour la factory
  */
-class Operation extends Entite implements IOperation {
+// objet serialisable : inputStream outputStream
+// pas de serialisable si connection, resultset, statement...
+class Operation extends Entite implements IOperation, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private String libelle;
+	private transient String libelle2; // non serialisable (champs calcule,
+	// static ou constante) dans un objet
+	// serialisable
 	private double montant;
 	private Date date;
 

@@ -1,34 +1,36 @@
 package fr.banque;
 
-class CompteASeuilRemunere extends CompteASeuil implements ICompteRemunere, ICompteASeuilRemunere {
+import fr.banque.exception.BanqueException;
 
-	private double taux;
+class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil {
+
+	private CompteASeuil compteASeuil;
 
 	public CompteASeuilRemunere() {
-		super();
+		this(-1, "", 0.0);
 	}
 
 	public CompteASeuilRemunere(int id, String libelle, double solde) {
 		super(id, libelle, solde);
 	}
 
-	public CompteASeuilRemunere(int id, String libelle, double solde, double seuil) {
-		super(id, libelle, solde, seuil);
+	public CompteASeuilRemunere(int id, String libelle, double solde, double taux) {
+		super(id, libelle, solde, taux);
 	}
 
 	public CompteASeuilRemunere(int id, String libelle, double solde, double seuil, double taux) {
-		super(id, libelle, solde, seuil);
-		this.setTaux(taux);
+		super(id, libelle, solde, taux);
+		this.compteASeuil = new CompteASeuil(id, libelle, solde, seuil);
 	}
 
 	@Override
-	public double getTaux() {
-		return this.taux;
+	public double getSeuil() {
+		return this.compteASeuil.getSeuil();
 	}
 
 	@Override
-	public void setTaux(double taux) {
-		this.taux = taux;
+	public void setSeuil(double seuil) throws BanqueException {
+		this.compteASeuil.setSeuil(seuil);
 	}
 
 	@Override
@@ -36,21 +38,17 @@ class CompteASeuilRemunere extends CompteASeuil implements ICompteRemunere, ICom
 		StringBuilder builder = new StringBuilder();
 		builder.append(super.toString());
 		builder.delete(builder.length() - 1, builder.length());
-		builder.append(", taux = ").append(this.getTaux()).append("]");
+		builder.append(", seuil = ").append(this.getSeuil()).append("]");
 		return builder.toString();
 
 	}
 
 	@Override
-	public double calculerInterets() {
-		// : qui va calculer les intérêts du compte (taux*solde)
-		return this.getSolde() * this.taux;
-	}
-
-	@Override
-	public String verserInterets() {
-		this.ajouter(this.calculerInterets());
-		return "versement de " + this.calculerInterets() + " d'interets";
+	public void retirer(double uneValeur) throws BanqueException {
+		// Il faut syncronizer les soldes
+		this.compteASeuil.setSolde(this.getSolde());
+		this.compteASeuil.retirer(uneValeur);
+		this.setSolde(this.compteASeuil.getSolde());
 	}
 
 }

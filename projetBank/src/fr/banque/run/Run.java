@@ -1,12 +1,12 @@
 package fr.banque.run;
 
-import fr.banque.BanqueException;
 import fr.banque.Factory;
 import fr.banque.IClient;
 import fr.banque.ICompte;
 import fr.banque.ICompteASeuil;
 import fr.banque.ICompteASeuilRemunere;
 import fr.banque.ICompteRemunere;
+import fr.banque.exception.BanqueException;
 
 public class Run {
 

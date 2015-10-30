@@ -1,5 +1,7 @@
 package fr.banque;
 
+import fr.banque.exception.BanqueException;
+
 public interface ICompteASeuil extends ICompte {
 
 	public abstract double getSeuil();

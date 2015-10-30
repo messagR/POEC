@@ -5,6 +5,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import fr.banque.exception.BanqueException;
+
 public final class Factory {
 
 	/*
@@ -36,39 +38,37 @@ public final class Factory {
 	}
 	// /singleton
 
-	/*
-	 * public int getDernierNumeroCompte() { return this.dernierNumeroCompte; }
-	 *
-	 * public int getDernierNumeroOperation() { return
-	 * this.dernierNumeroOperation; }
-	 *
-	 * public void setDernierNumeroOperation(int dernierNumeroOperation) {
-	 * this.dernierNumeroOperation = dernierNumeroOperation; }
-	 *
-	 * private void setDernierNumeroCompte(int dernierNumCompte) {
-	 * this.dernierNumeroCompte = dernierNumCompte; }
-	 *
-	 * public int getDernierNumeroClient() { return this.dernierNumeroClient; }
-	 *
-	 * private void setDernierNumeroClient(int dernierNumClient) {
-	 * this.dernierNumeroClient = dernierNumClient; }
-	 *
-	 * public void affecteNumeroCompte(ICompte compte) {
-	 * compte.setNumero(this.getDernierNumeroCompte());
-	 * this.dernierNumeroCompte++;
-	 *
-	 * }
-	 *
-	 * public void affecteNumeroOperation(IOperation operation) {
-	 * operation.setNumero(this.getDernierNumeroOperation());
-	 * this.dernierNumeroOperation++;
-	 *
-	 * }
-	 *
-	 * public void decrementeNumeroCompte() { this.dernierNumeroCompte--;
-	 *
-	 * }
-	 */
+	// public int getDernierNumeroCompte() { return this.dernierNumeroCompte; }
+	//
+	// public int getDernierNumeroOperation() { return
+	// this.dernierNumeroOperation; }
+	//
+	// public void setDernierNumeroOperation(int dernierNumeroOperation) {
+	// this.dernierNumeroOperation = dernierNumeroOperation; }
+	//
+	// private void setDernierNumeroCompte(int dernierNumCompte) {
+	// this.dernierNumeroCompte = dernierNumCompte; }
+	//
+	// public int getDernierNumeroClient() { return this.dernierNumeroClient; }
+	//
+	// private void setDernierNumeroClient(int dernierNumClient) {
+	// this.dernierNumeroClient = dernierNumClient; }
+	//
+	// public void affecteNumeroCompte(ICompte compte) {
+	// compte.setNumero(this.getDernierNumeroCompte());
+	// this.dernierNumeroCompte++;
+	//
+	// }
+	//
+	// public void affecteNumeroOperation(IOperation operation) {
+	// operation.setNumero(this.getDernierNumeroOperation());
+	// this.dernierNumeroOperation++;
+	//
+	// }
+	//
+	// public void decrementeNumeroCompte() { this.dernierNumeroCompte--;
+	//
+	// }
 
 	public IOperation creerOperation(int id) {
 		IOperation operation = this.creerOperation(id, "", 0.0, new Date());
@@ -77,7 +77,7 @@ public final class Factory {
 	}
 
 	public IOperation creerOperation(int id, String libelle, double montant, Date date) {
-		IOperation operation = this.creerOperation(id, libelle, montant, date);
+		IOperation operation = new Operation(id, libelle, montant, date);
 		// this.affecteNumeroOperation(operation);
 		return operation;
 	}
@@ -120,13 +120,13 @@ public final class Factory {
 			libelle = (String) args[2];
 			solde = (Double) args[3];
 			if (type == ICompte.class) {
-				compte = new Compte();
+				compte = new Compte(id, libelle, solde);
 			} else if (type == ICompteRemunere.class) {
-				compte = new CompteRemunere();
+				compte = new CompteRemunere(id, libelle, solde);
 			} else if (type == ICompteASeuil.class) {
-				compte = new CompteASeuil();
+				compte = new CompteASeuil(id, libelle, solde);
 			} else if (type == ICompteASeuilRemunere.class) {
-				compte = new CompteASeuilRemunere();
+				compte = new CompteASeuilRemunere(id, libelle, solde);
 			}
 			break;
 		case 5:
@@ -224,43 +224,71 @@ public final class Factory {
 			this.setDerniereConnection(derniereConnection);
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getNom()
+		 */
 		@Override
 		public String getNom() {
 			return this.nom;
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setNom(java.lang.String)
+		 */
 		@Override
 		public void setNom(String nom) {
 			this.nom = nom;
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getPrenom()
+		 */
 		@Override
 		public String getPrenom() {
 			return this.prenom;
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setPrenom(java.lang.String)
+		 */
 		@Override
 		public void setPrenom(String prenom) {
 			this.prenom = prenom;
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getAge()
+		 */
 		@Override
 		public int getAge() {
 			return this.age;
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setAge(int)
+		 */
 		@Override
 		public void setAge(int age) {
 			this.age = age;
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getComptes()
+		 */
 		@Override
 		public ICompte[] getComptes() {
-			ICompte[] comptes = new ICompte[ClientSupprime.NB_COMPTE_MAX];
+			ICompte[] comptes = new ICompte[Client.NB_COMPTE_MAX];
 			// return this.comptes.toArray(comptes);
-			return this.comptes.values().toArray(comptes);
+			if (this.comptes != null) {
+				return this.comptes.values().toArray(comptes);
+			} else {
+				return null;
+			}
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setComptes(fr.banque.ICompte[])
+		 */
 		@Override
 		public void setComptes(ICompte[] comptes) {
 			// this.comptes = Arrays.asList(comptes);
@@ -274,119 +302,128 @@ public final class Factory {
 			}
 		}
 
-		/**
-		 * @return the login
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getLogin()
 		 */
+		@Override
 		public String getLogin() {
 			return this.login;
 		}
 
-		/**
-		 * @param login
-		 *            the login to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setLogin(java.lang.String)
 		 */
+		@Override
 		public void setLogin(String login) {
 			this.login = login;
 		}
 
-		/**
-		 * @return the password
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getPassword()
 		 */
+		@Override
 		public String getPassword() {
 			return this.password;
 		}
 
-		/**
-		 * @param password
-		 *            the password to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setPassword(java.lang.String)
 		 */
+		@Override
 		public void setPassword(String password) {
 			this.password = password;
 		}
 
-		/**
-		 * @return the adresse
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getAdresse()
 		 */
+		@Override
 		public String getAdresse() {
 			return this.adresse;
 		}
 
-		/**
-		 * @param adresse
-		 *            the adresse to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setAdresse(java.lang.String)
 		 */
+		@Override
 		public void setAdresse(String adresse) {
 			this.adresse = adresse;
 		}
 
-		/**
-		 * @return the telephone
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getTelephone()
 		 */
+		@Override
 		public String getTelephone() {
 			return this.telephone;
 		}
 
-		/**
-		 * @param telephone
-		 *            the telephone to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setTelephone(java.lang.String)
 		 */
+		@Override
 		public void setTelephone(String telephone) {
 			this.telephone = telephone;
 		}
 
-		/**
-		 * @return the codePostal
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getCodePostal()
 		 */
+		@Override
 		public int getCodePostal() {
 			return this.codePostal;
 		}
 
-		/**
-		 * @param codePostal
-		 *            the codePostal to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setCodePostal(int)
 		 */
+		@Override
 		public void setCodePostal(int codePostal) {
 			this.codePostal = codePostal;
 		}
 
-		/**
-		 * @return the derniereConnection
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getDerniereConnection()
 		 */
+		@Override
 		public Date getDerniereConnection() {
 			return this.derniereConnection;
 		}
 
-		/**
-		 * @param derniereConnection
-		 *            the derniereConnection to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setDerniereConnection(java.util.Date)
 		 */
+		@Override
 		public void setDerniereConnection(Date derniereConnection) {
 			this.derniereConnection = derniereConnection;
 		}
 
-		/**
-		 * @return the sexe
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getSexe()
 		 */
+		@Override
 		public int getSexe() {
 			return this.sexe;
 		}
 
-		/**
-		 * @param sexe
-		 *            the sexe to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setSexe(int)
 		 */
+		@Override
 		public void setSexe(int sexe) {
 			this.sexe = sexe;
 		}
 
-		/**
-		 * @param comptes
-		 *            the comptes to set
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#setComptes(java.util.Map)
 		 */
 		public void setComptes(Map<Integer, ICompte> comptes) {
 			this.comptes = comptes;
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#ajouterCompte(fr.banque.ICompte)
+		 */
 		@Override
 		public void ajouterCompte(ICompte unCompte) throws BanqueException {
 			if (this.comptes == null) {
@@ -401,6 +438,9 @@ public final class Factory {
 			}
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#getCompte(int)
+		 */
 		@Override
 		public ICompte getCompte(int numeroCompte) {
 			// Iterator iterCompte = this.comptes.iterator();
@@ -424,7 +464,32 @@ public final class Factory {
 			if (this.getPrenom() != null) {
 				builder.append("prenom = ").append(this.getPrenom()).append(", ");
 			}
-			builder.append("age = ").append(this.getAge()).append("]");
+			if (this.getLogin() != null) {
+				builder.append("login = ").append(this.getLogin()).append(", ");
+			}
+			if (this.getPassword() != null) {
+				builder.append("mot de passe = ").append(this.getPassword()).append(", ");
+			}
+			builder.append("cp = ").append(this.getCodePostal()).append(", ");
+			if (this.getAdresse() != null) {
+				builder.append("adresse = ").append(this.getAdresse()).append(", ");
+			}
+			builder.append("telephone = ").append(this.getTelephone()).append(", ");
+			builder.append("sexe = ");
+			switch (this.getSexe()) {
+			case 0:
+				builder.append("Mascullin");
+				break;
+			case 1:
+				builder.append("Feminin");
+				break;
+			default:
+				builder.append("ne sais pas");
+				break;
+			}
+			builder.append(", ");
+			builder.append("derniere connexion = ").append(this.getDerniereConnection()).append(", ");
+			builder.append("age = ").append(this.getAge());
 			if (this.getComptes() != null) {
 				builder.append("\n         | ").append("comptes = ");
 				// Iterator iterCompte = this.comptes.iterator();
@@ -437,9 +502,13 @@ public final class Factory {
 					}
 				}
 			}
+			builder.append("]");
 			return builder.toString();
 		}
 
+		/* (non-Javadoc)
+		 * @see fr.banque.IClient2#equals(java.lang.Object)
+		 */
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj) {

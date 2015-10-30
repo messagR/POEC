@@ -1,6 +1,10 @@
 package fr.banque;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import fr.banque.exception.BanqueException;
 
 /**
  * visu package pour la factory
@@ -9,7 +13,7 @@ class Compte extends Entite implements ICompte {
 
 	private String libelle;
 	private double solde;
-	private List operations;
+	private List<IOperation> operations;
 
 	/**
 	 * visu package pour la factory
@@ -28,41 +32,47 @@ class Compte extends Entite implements ICompte {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.banque.dfgsdfg#getSolde()
+	 */
+	@Override
 	public double getSolde() {
 		return this.solde;
 	}
 
-	private void setSolde(double solde) {
+	protected void setSolde(double solde) {
 		this.solde = solde;
 	}
 
-	/**
-	 * @return the libelle
+	/* (non-Javadoc)
+	 * @see fr.banque.dfgsdfg#getLibelle()
 	 */
+	@Override
 	public String getLibelle() {
 		return this.libelle;
 	}
 
-	/**
-	 * @param libelle
-	 *            the libelle to set
+	/* (non-Javadoc)
+	 * @see fr.banque.dfgsdfg#setLibelle(java.lang.String)
 	 */
+	@Override
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
 
-	/**
-	 * @return the operations
+	/* (non-Javadoc)
+	 * @see fr.banque.dfgsdfg#getOperations()
 	 */
-	public List getOperations() {
+	@Override
+	public List<IOperation> getOperations() {
 		return this.operations;
 	}
 
-	/**
-	 * @param operations
-	 *            the operations to set
+	/* (non-Javadoc)
+	 * @see fr.banque.dfgsdfg#setOperations(java.util.List)
 	 */
-	public void setOperations(List operations) {
+	@Override
+	public void setOperations(List<IOperation> operations) {
 		this.operations = operations;
 	}
 
@@ -78,6 +88,9 @@ class Compte extends Entite implements ICompte {
 
 	@Override
 	public void ajouterOperation(IOperation uneOperation) {
+		if(this.operations == null){
+			this.operations = new ArrayList<IOperation>();
+		}
 		this.operations.add(uneOperation);
 	}
 
@@ -87,7 +100,20 @@ class Compte extends Entite implements ICompte {
 		builder.append(super.toString());
 		builder.delete(builder.length() - 1, builder.length());
 		builder.append(", libelle = ").append(this.getLibelle());
-		builder.append(", solde = ").append(this.getSolde()).append("]");
+		builder.append(", solde = ").append(this.getSolde());
+		if (this.getOperations() != null) {
+			builder.append("\n         | ").append("operations = ");
+			// Iterator iterCompte = this.comptes.iterator();
+			Iterator<IOperation> iteroperation = this.operations.iterator();
+			while (iteroperation.hasNext()) {
+				IOperation operation = iteroperation.next();
+				builder.append(operation.toString().split(" ", 2)[1]);
+				if (iteroperation.hasNext()) {
+					builder.append(", ");
+				}
+			}
+		}
+		builder.append("]");
 		return builder.toString();
 	}
 
