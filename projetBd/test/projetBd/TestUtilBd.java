@@ -11,9 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.banque.IClient;
-import fr.banque.ICompte;
-import fr.banque.IOperation;
+import fr.banque.entity.IClient;
+import fr.banque.entity.ICompte;
+import fr.banque.entity.IOperation;
 import fr.banque.exception.BanqueException;
 import fr.banque.exception.ClientIntrouvableException;
 import fr.banque.exception.CompteIntrouvableException;

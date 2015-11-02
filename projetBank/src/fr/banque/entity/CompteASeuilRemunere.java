@@ -1,8 +1,9 @@
-package fr.banque;
+package fr.banque.entity;
 
 import fr.banque.exception.BanqueException;
 
 class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil {
+	private static final long serialVersionUID = 1L;
 
 	private CompteASeuil compteASeuil;
 
@@ -45,10 +46,12 @@ class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil {
 
 	@Override
 	public void retirer(double uneValeur) throws BanqueException {
-		// Il faut syncronizer les soldes
-		this.compteASeuil.setSolde(this.getSolde());
-		this.compteASeuil.retirer(uneValeur);
-		this.setSolde(this.compteASeuil.getSolde());
+		if ((this.getSolde() - uneValeur) <= this.getSeuil()) {
+			throw new BanqueException("Votre seuil de " + this.getSeuil() + " ne vous permet pas de retirer "
+					+ uneValeur + " de votre compte " + this.getNumero());
+		} else {
+			super.retirer(uneValeur);
+		}
 	}
 
 }

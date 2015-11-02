@@ -1,4 +1,4 @@
-package fr.banque;
+package fr.banque.entity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,25 +6,17 @@ import java.util.List;
 
 import fr.banque.exception.BanqueException;
 
-/**
- * visu package pour la factory
- */
 class Compte extends Entite implements ICompte {
+	private static final long serialVersionUID = 1L;
 
 	private String libelle;
 	private double solde;
 	private List<IOperation> operations;
 
-	/**
-	 * visu package pour la factory
-	 */
 	Compte() {
 		this(0, "", 0);
 	}
 
-	/**
-	 * visu package pour la factory
-	 */
 	Compte(int id, String libelle, double solde) {
 		this.setNumero(id);
 		this.setLibelle(libelle);
@@ -32,9 +24,6 @@ class Compte extends Entite implements ICompte {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see fr.banque.dfgsdfg#getSolde()
-	 */
 	@Override
 	public double getSolde() {
 		return this.solde;
@@ -44,33 +33,21 @@ class Compte extends Entite implements ICompte {
 		this.solde = solde;
 	}
 
-	/* (non-Javadoc)
-	 * @see fr.banque.dfgsdfg#getLibelle()
-	 */
 	@Override
 	public String getLibelle() {
 		return this.libelle;
 	}
 
-	/* (non-Javadoc)
-	 * @see fr.banque.dfgsdfg#setLibelle(java.lang.String)
-	 */
 	@Override
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
 
-	/* (non-Javadoc)
-	 * @see fr.banque.dfgsdfg#getOperations()
-	 */
 	@Override
 	public List<IOperation> getOperations() {
 		return this.operations;
 	}
 
-	/* (non-Javadoc)
-	 * @see fr.banque.dfgsdfg#setOperations(java.util.List)
-	 */
 	@Override
 	public void setOperations(List<IOperation> operations) {
 		this.operations = operations;

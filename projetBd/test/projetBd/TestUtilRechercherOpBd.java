@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.banque.IOperation;
+import fr.banque.entity.IOperation;
 import fr.banque.exception.CompteIntrouvableException;
 
 /**

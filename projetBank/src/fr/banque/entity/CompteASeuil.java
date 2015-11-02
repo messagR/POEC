@@ -1,8 +1,9 @@
-package fr.banque;
+package fr.banque.entity;
 
 import fr.banque.exception.BanqueException;
 
 class CompteASeuil extends Compte implements ICompteASeuil {
+	private static final long serialVersionUID = 1L;
 
 	private double seuil;
 
@@ -35,9 +36,9 @@ class CompteASeuil extends Compte implements ICompteASeuil {
 	@Override
 	public void setSeuil(double seuil) throws BanqueException {
 		if (super.getSolde() < seuil) {
-			throw new BanqueException(
-					"Solde insuffisant : modification seuil impossible pour le compte n°" + this.getNumero()
-					+ " avec un seuil de " + seuil);
+			throw new BanqueException(String.format(
+					"Solde insuffisant : modification seuil impossible pour le compte n°{} avec un seuil de {}",
+					this.getNumero(), seuil));
 		} else {
 			this.seuil = seuil;
 		}
@@ -49,7 +50,8 @@ class CompteASeuil extends Compte implements ICompteASeuil {
 			super.retirer(uneValeur);
 		}
 		else {
-			throw new BanqueException("Solde insuffisant après retrait : retrait impossible");
+			throw new BanqueException("Votre seuil de " + this.getSeuil() + " ne vous permet pas de retirer "
+					+ uneValeur + " de votre compte " + this.getNumero());
 		}
 	}
 

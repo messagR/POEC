@@ -1,7 +1,7 @@
 /**
  * test
  */
-package com.exo.exceptions;
+package com.exo.io;
 
 import java.io.File;
 
@@ -9,7 +9,7 @@ import java.io.File;
  * @author PC
  *
  */
-public class MonException {
+public class Run {
 
 	public static void main(String[] args) {
 		File f = new File("c:/Temp");

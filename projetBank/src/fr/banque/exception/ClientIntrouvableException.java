@@ -1,9 +1,9 @@
 package fr.banque.exception;
 
+@SuppressWarnings("serial")
 public class ClientIntrouvableException extends Exception {
 
 	public ClientIntrouvableException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public ClientIntrouvableException(String message) {

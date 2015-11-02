@@ -1,9 +1,9 @@
 package fr.banque.exception;
 
+@SuppressWarnings("serial")
 public class ChampsVidesException extends Exception {
 
 	public ChampsVidesException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public ChampsVidesException(String message) {

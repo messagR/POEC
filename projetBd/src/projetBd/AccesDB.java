@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import fr.banque.Factory;
-import fr.banque.IClient;
-import fr.banque.ICompte;
-import fr.banque.ICompteASeuil;
-import fr.banque.ICompteASeuilRemunere;
-import fr.banque.ICompteRemunere;
-import fr.banque.IOperation;
+import fr.banque.entity.Factory;
+import fr.banque.entity.IClient;
+import fr.banque.entity.ICompte;
+import fr.banque.entity.ICompteASeuil;
+import fr.banque.entity.ICompteASeuilRemunere;
+import fr.banque.entity.ICompteRemunere;
+import fr.banque.entity.IOperation;
 import fr.banque.exception.BanqueException;
 import fr.banque.exception.ChampsVidesException;
 import fr.banque.exception.ClientIntrouvableException;
@@ -54,7 +54,7 @@ public class AccesDB {
 		try {
 			Class.forName(driver);
 		} catch (Throwable cnf) {
-			throw new SQLException("Impossible de charger le driver '" + driver + "'", cnf);
+			throw new SQLException(String.format("Impossible de charger le driver '{}' {}", driver, cnf));
 		}
 	}
 
@@ -114,7 +114,7 @@ public class AccesDB {
 				resCompte = steCompte.executeQuery();
 				ICompte compte = null;
 				while (resCompte.next()) {
-					Class type = null;
+					Class<?> type = null;
 					int idCompte = resCompte.getInt("id");
 					String libelleCompte = resCompte.getString("libelle");
 					double solde = resCompte.getDouble("solde");
@@ -221,7 +221,6 @@ public class AccesDB {
 
 	public void afficherNomPrenomUtilisateur() {
 
-		Factory f = Factory.getInstance();
 		PreparedStatement steClient = null;
 		ResultSet resClient = null;
 		try {

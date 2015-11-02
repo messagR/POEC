@@ -1,9 +1,9 @@
 package fr.banque.exception;
 
+@SuppressWarnings("serial")
 public class BanqueException extends Exception {
 
 	public BanqueException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public BanqueException(String message) {

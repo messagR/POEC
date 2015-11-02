@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.banque.IClient;
+import fr.banque.entity.IClient;
 import fr.banque.exception.ChampsVidesException;
 import fr.banque.exception.ClientIntrouvableException;
 

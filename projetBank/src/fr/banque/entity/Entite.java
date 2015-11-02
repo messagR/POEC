@@ -1,6 +1,10 @@
-package fr.banque;
+package fr.banque.entity;
 
-class Entite implements IEntite {
+import java.io.Serializable;
+
+class Entite implements IEntite, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private int numero;
 

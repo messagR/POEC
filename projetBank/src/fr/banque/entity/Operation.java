@@ -1,33 +1,18 @@
-package fr.banque;
+package fr.banque.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * visu package pour la factory
- */
-// objet serialisable : inputStream outputStream
-// pas de serialisable si connection, resultset, statement...
-class Operation extends Entite implements IOperation, Serializable {
+class Operation extends Entite implements IOperation {
 	private static final long serialVersionUID = 1L;
 
 	private String libelle;
-	private transient String libelle2; // non serialisable (champs calcule,
-	// static ou constante) dans un objet
-	// serialisable
 	private double montant;
 	private Date date;
 
-	/**
-	 * visu package pour la factory
-	 */
 	Operation() {
 		this(0, "", 0, new Date());
 	}
 
-	/**
-	 * visu package pour la factory
-	 */
 	Operation(int id, String libelle, double montant, Date date) {
 		this.setNumero(id);
 		this.setLibelle(libelle);
@@ -36,47 +21,26 @@ class Operation extends Entite implements IOperation, Serializable {
 
 	}
 
-	/**
-	 * @return the libelle
-	 */
 	public String getLibelle() {
 		return this.libelle;
 	}
 
-	/**
-	 * @param libelle
-	 *            the libelle to set
-	 */
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
 
-	/**
-	 * @return the montant
-	 */
 	public double getMontant() {
 		return this.montant;
 	}
 
-	/**
-	 * @param montant
-	 *            the montant to set
-	 */
 	public void setMontant(double montant) {
 		this.montant = montant;
 	}
 
-	/**
-	 * @return the date
-	 */
 	public Date getDate() {
 		return this.date;
 	}
 
-	/**
-	 * @param date
-	 *            the date to set
-	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}

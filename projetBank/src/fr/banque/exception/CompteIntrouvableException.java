@@ -1,9 +1,9 @@
 package fr.banque.exception;
 
+@SuppressWarnings("serial")
 public class CompteIntrouvableException extends Exception {
 
 	public CompteIntrouvableException() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public CompteIntrouvableException(String message) {
