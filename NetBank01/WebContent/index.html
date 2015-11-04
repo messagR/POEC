@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Insert title here</title>
+		<script type='text/javascript' src='JS/jquery.min.js'></script>
+		<link rel='stylesheet' href='css/styles.css' >
+	</head>
+	<body>
+		<h1>Ma banque</h1>
+		<br/><br/>
+		<form action='./ServletClient2' method='post'>
+			<div style="cursor:pointer;">Voir les clients en Servlet uniquement</div>
+		</form>
+		<br/><br/>
+		<form action='./Client2.jsp' method='post'>
+			<div style="cursor:pointer;">Voir les clients en JSP uniquement</div>
+		</form>
+		<br/><br/>
+		<form action='./ServletClient' method='post'>
+			<div style="cursor:pointer;">Voir les clients en Servlet et JSP</div>
+		</form>
+		<script>
+			$('div').click(function(){
+				$(this).parent().submit();
+			});
+		</script>
+	</body>
+</html>
