@@ -6,18 +6,18 @@ import fr.banque.exception.BanqueException;
 
 public final class Factory {
 
-	// private int dernierNumeroClient;
-	// private int dernierNumeroCompte;
-	// private int dernierNumeroOperation;
+	private int dernierNumeroClient;
+	private int dernierNumeroCompte;
+	private int dernierNumeroOperation;
 
 	// singleton
 	private static Factory instance;
 
 	private Factory() {
 		super();
-		// this.setDernierNumeroClient(1);
-		// this.setDernierNumeroCompte(100000);
-		// this.setDernierNumeroOperation(1);
+		this.setDernierNumeroClient(1);
+		this.setDernierNumeroCompte(100000);
+		this.setDernierNumeroOperation(1);
 	}
 
 	// getInstance ou getDefaultInstance
@@ -33,37 +33,46 @@ public final class Factory {
 	}
 	// /singleton
 
-	// public int getDernierNumeroCompte() { return this.dernierNumeroCompte; }
-	//
-	// public int getDernierNumeroOperation() { return
-	// this.dernierNumeroOperation; }
-	//
-	// public void setDernierNumeroOperation(int dernierNumeroOperation) {
-	// this.dernierNumeroOperation = dernierNumeroOperation; }
-	//
-	// private void setDernierNumeroCompte(int dernierNumCompte) {
-	// this.dernierNumeroCompte = dernierNumCompte; }
-	//
-	// public int getDernierNumeroClient() { return this.dernierNumeroClient; }
-	//
-	// private void setDernierNumeroClient(int dernierNumClient) {
-	// this.dernierNumeroClient = dernierNumClient; }
-	//
-	// public void affecteNumeroCompte(ICompte compte) {
-	// compte.setNumero(this.getDernierNumeroCompte());
-	// this.dernierNumeroCompte++;
-	//
-	// }
-	//
-	// public void affecteNumeroOperation(IOperation operation) {
-	// operation.setNumero(this.getDernierNumeroOperation());
-	// this.dernierNumeroOperation++;
-	//
-	// }
-	//
-	// public void decrementeNumeroCompte() { this.dernierNumeroCompte--;
-	//
-	// }
+	public int getDernierNumeroCompte() {
+		return this.dernierNumeroCompte;
+	}
+
+	private void setDernierNumeroCompte(int dernierNumCompte) {
+		this.dernierNumeroCompte = dernierNumCompte;
+	}
+
+	public int getDernierNumeroOperation() {
+		return this.dernierNumeroOperation;
+	}
+
+	public void setDernierNumeroOperation(int dernierNumeroOperation) {
+		this.dernierNumeroOperation = dernierNumeroOperation;
+	}
+
+	public int getDernierNumeroClient() {
+		return this.dernierNumeroClient;
+	}
+
+	private void setDernierNumeroClient(int dernierNumClient) {
+		this.dernierNumeroClient = dernierNumClient;
+	}
+
+	public void affecteNumeroCompte(ICompte compte) {
+		compte.setNumero(this.getDernierNumeroCompte());
+		this.dernierNumeroCompte++;
+
+	}
+
+	public void affecteNumeroOperation(IOperation operation) {
+		operation.setNumero(this.getDernierNumeroOperation());
+		this.dernierNumeroOperation++;
+
+	}
+
+	public void decrementeNumeroCompte() {
+		this.dernierNumeroCompte--;
+
+	}
 
 	public IOperation creerOperation(int id) {
 		IOperation operation = this.creerOperation(id, "", 0.0, new Date());
@@ -162,8 +171,6 @@ public final class Factory {
 			}
 			break;
 		}
-
-		// this.affecteNumeroCompte(compte);
 		return compte;
 	}
 

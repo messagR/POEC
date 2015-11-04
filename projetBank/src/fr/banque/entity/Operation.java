@@ -21,6 +21,7 @@ class Operation extends Entite implements IOperation {
 
 	}
 
+	@Override
 	public String getLibelle() {
 		return this.libelle;
 	}
@@ -29,6 +30,7 @@ class Operation extends Entite implements IOperation {
 		this.libelle = libelle;
 	}
 
+	@Override
 	public double getMontant() {
 		return this.montant;
 	}
@@ -37,6 +39,7 @@ class Operation extends Entite implements IOperation {
 		this.montant = montant;
 	}
 
+	@Override
 	public Date getDate() {
 		return this.date;
 	}

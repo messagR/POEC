@@ -35,10 +35,10 @@ class CompteASeuil extends Compte implements ICompteASeuil {
 
 	@Override
 	public void setSeuil(double seuil) throws BanqueException {
-		if (super.getSolde() < seuil) {
+		if (this.getSolde() < seuil) {
 			throw new BanqueException(String.format(
-					"Solde insuffisant : modification seuil impossible pour le compte n°{} avec un seuil de {}",
-					this.getNumero(), seuil));
+"Solde insuffisant : modification seuil impossible pour le compte n°"
+							+ this.getNumero() + " avec un seuil de " + seuil));
 		} else {
 			this.seuil = seuil;
 		}

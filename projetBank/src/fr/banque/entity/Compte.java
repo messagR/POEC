@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.banque.exception.BanqueException;
 
 class Compte extends Entite implements ICompte {
 	private static final long serialVersionUID = 1L;
+	private final static Logger LOG = LogManager.getLogger();
 
 	private String libelle;
 	private double solde;
@@ -30,6 +34,9 @@ class Compte extends Entite implements ICompte {
 	}
 
 	protected void setSolde(double solde) {
+		if (solde < 0) {
+			Compte.LOG.warn("Le solde du compte " + this.getNumero() + " est passé en négatif");
+		}
 		this.solde = solde;
 	}
 

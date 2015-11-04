@@ -50,11 +50,11 @@ public class AccesDB {
 	// }
 	// }
 
-	AccesDB(String driver) throws SQLException {
+	public AccesDB(String driver) throws SQLException {
 		try {
 			Class.forName(driver);
 		} catch (Throwable cnf) {
-			throw new SQLException(String.format("Impossible de charger le driver '{}' {}", driver, cnf));
+			throw new SQLException("Impossible de charger le driver '" + driver + "'" + cnf);
 		}
 	}
 
@@ -182,8 +182,6 @@ public class AccesDB {
 					}
 				}
 			}
-			System.out.println(listeClient);
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -587,7 +585,15 @@ public class AccesDB {
 		return compte;
 	}
 
-	public List<IOperation> rechercherOp(int cpID, Date dateDeb, Date dateFin, Boolean creditDebit)
+	/**
+	 * @param cpID
+	 * @param args
+	 *            (datedeb, datefin, creditdebit
+	 * @return
+	 * @throws SQLException
+	 * @throws CompteIntrouvableException
+	 */
+	public List<IOperation> rechercherOp(int cpID, Object... args)
 			throws SQLException, CompteIntrouvableException {
 		PreparedStatement ste = null;
 		ResultSet resultat = null;
@@ -602,20 +608,40 @@ public class AccesDB {
 			listeOperation = new ArrayList<IOperation>();
 			String requete = "select * from operation where compteId = ?";
 			List<Date> listeTrous = new ArrayList<Date>();
-			if (dateDeb != null) {
-				requete += " and date >= ? ";
-				listeTrous.add(dateDeb);
-			}
-			if (dateFin != null) {
-				requete += " and date <= ? ";
-				listeTrous.add(dateFin);
-			}
-			if (creditDebit != null) {
-				if (creditDebit) {
-					requete += " and montant > 0 ";
-				} else {
-					requete += " and montant < 0 ";
+			switch (args.length) {
+			case 1:
+				if (args[0] instanceof Date) {
+					requete += " and date >= ? ";
+					listeTrous.add((Date) args[0]);
 				}
+				break;
+			case 2:
+				if (args[0] instanceof Date) {
+					requete += " and date >= ? ";
+					listeTrous.add((Date) args[0]);
+				}
+				if (args[1] instanceof Date) {
+					requete += " and date <= ? ";
+					listeTrous.add((Date) args[1]);
+				}
+				break;
+			case 3:
+				if (args[0] instanceof Date) {
+					requete += " and date >= ? ";
+					listeTrous.add((Date) args[0]);
+				}
+				if (args[1] instanceof Date) {
+					requete += " and date <= ? ";
+					listeTrous.add((Date) args[1]);
+				}
+				if (args[2] instanceof Boolean) {
+					if ((boolean) args[2]) {
+						requete += " and montant > 0 ";
+					} else {
+						requete += " and montant < 0 ";
+					}
+				}
+				break;
 			}
 			ste = AccesDB.connexion.prepareStatement(requete);
 			ste.setInt(1, compte.getNumero());
@@ -863,7 +889,7 @@ public class AccesDB {
 			System.out.println("\nRecuperation des infos du compte 12");
 			System.out.println(utilDb.rechercherCompte(12));
 			System.out.println("\nRecuperation des infos des operations du compte 12");
-			System.out.println(utilDb.rechercherOp(12, null, null, null));
+			System.out.println(utilDb.rechercherOp(12));
 			System.out.println("\nFaire un virement de 50 du compte 15 au 12");
 			List<IOperation> lOperation = utilDb.faireVirement(15, 12, 50d);
 			Iterator<IOperation> iterOperation = lOperation.iterator();

@@ -28,7 +28,7 @@ class CompteRemunere extends Compte implements ICompteRemunere {
 	@Override
 	public void setTaux(double taux) {
 		if ((taux < 0) || (taux >= 1)) {
-			throw new IllegalArgumentException("Le taux doit etre entre [0, 1[");
+			throw new IllegalArgumentException("Le taux doit etre entre [0, 1]");
 		}
 		this.taux = taux;
 	}

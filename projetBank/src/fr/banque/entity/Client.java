@@ -5,10 +5,14 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.banque.exception.BanqueException;
 
 class Client extends Entite implements IClient {
 	private static final long serialVersionUID = 1L;
+	private final static Logger LOG = LogManager.getLogger();
 
 	private String nom, prenom, login, password, adresse, telephone;
 	private int age, codePostal, sexe;
@@ -173,11 +177,11 @@ class Client extends Entite implements IClient {
 		}
 		if (Client.NB_COMPTE_MAX == this.comptes.size()) {
 			throw new BanqueException(
-					String.format("Nombre de comptes maximum atteint pour le client n°{}", this.getNumero()));
+					"Nombre de comptes maximum atteint pour le client n°" + this.getNumero());
 		} else {
 			if (this.comptes.containsKey(unCompte.getNumero())) {
 				throw new BanqueException(
-						String.format("Le client n°{} a deja un compte n°{}", this.getNumero(), unCompte.getNumero()));
+						"Le client n°" + this.getNumero() + " a deja un compte n°" + unCompte.getNumero());
 			}
 			// this.comptes.add(unCompte);
 			this.comptes.put(unCompte.getNumero(), unCompte);
@@ -193,7 +197,11 @@ class Client extends Entite implements IClient {
 		// return compte;
 		// }
 		// }
-		return this.comptes.get(numeroCompte);
+		ICompte resultat = this.comptes.get(numeroCompte);
+		if (resultat == null) {
+			Client.LOG.warn("Pas de compte ayant le numero " + numeroCompte + " pour le client " + this.getNumero());
+		}
+		return resultat;
 	}
 
 	@Override

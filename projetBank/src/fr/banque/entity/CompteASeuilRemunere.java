@@ -1,9 +1,13 @@
 package fr.banque.entity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.banque.exception.BanqueException;
 
 class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil {
 	private static final long serialVersionUID = 1L;
+	private final static Logger LOG = LogManager.getLogger();
 
 	private CompteASeuil compteASeuil;
 
@@ -31,6 +35,9 @@ class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil {
 
 	@Override
 	public void setSeuil(double seuil) throws BanqueException {
+		if (seuil > this.getSolde()) {
+			CompteASeuilRemunere.LOG.warn("Le seuil du compte " + this.getNumero() + " est supérieur a son solde");
+		}
 		this.compteASeuil.setSeuil(seuil);
 	}
 
@@ -47,7 +54,8 @@ class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil {
 	@Override
 	public void retirer(double uneValeur) throws BanqueException {
 		if ((this.getSolde() - uneValeur) <= this.getSeuil()) {
-			throw new BanqueException("Votre seuil de " + this.getSeuil() + " ne vous permet pas de retirer "
+			throw new BanqueException(
+"Votre seuil de " + this.getSeuil() + " ne vous permet pas de retirer "
 					+ uneValeur + " de votre compte " + this.getNumero());
 		} else {
 			super.retirer(uneValeur);

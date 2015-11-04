@@ -7,5 +7,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/projetBank"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2-api-2.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-api-2.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-core-2.4.1.jar"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
