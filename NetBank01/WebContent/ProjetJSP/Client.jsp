@@ -55,7 +55,7 @@
 				<td><%=client.getPrenom() %></td>
 				<td><%=client.getAge() %></td>
 				<td>
-					<form action='./Compte2.jsp' method='post'>
+					<form action='./Compte.jsp' method='post'>
 						<input type='hidden' name='id' value='<%=client.getNumero() %>'>
 						<input type='submit' value='Voir ses comptes'>
 					</form>
@@ -98,7 +98,7 @@
 							<td>Pas de Seuil</td>
 	<%							}%>
 							<td>
-								<form action='./Operation2.jsp' method='post' name='formulaire'>
+								<form action='./Operation.jsp' method='post' name='formulaire'>
 									<input type='hidden' name='id' value='<%=compte.getNumero() %>'>
 									<div class='operation' style='cursor:pointer;'>Voir ses operations</div>
 								</form>

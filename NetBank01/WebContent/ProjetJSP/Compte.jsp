@@ -67,7 +67,7 @@
 					<td>Pas de Seuil</td>
 	<%				}%>
 					<td>
-						<form action='./Operation2.jsp' method='post'>
+						<form action='./Operation.jsp' method='post'>
 							<input type='hidden' name='id' value='<%=compte.getNumero() %>'>
 							<input type='submit' value='Voir ses operations'>
 						</form>

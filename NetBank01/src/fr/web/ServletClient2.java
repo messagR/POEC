@@ -24,7 +24,7 @@ import projetBd.AccesDB;
 /**
  * Servlet implementation class ServletClient
  */
-@WebServlet("/ServletClient2")
+@WebServlet("/ProjetServlet/ServletClient")
 public class ServletClient2 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
