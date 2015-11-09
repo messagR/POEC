@@ -7,7 +7,7 @@
 		<Appender type="Console" name="stdout">
 			<PatternLayout pattern="[%d{dd/MM/yyyy HH:mm:ss}] - %5p - %C.%M(...) - %m %n" />
 		</Appender>
-		<File name="Fichier" fileName="c:/Temp/app.log">
+		<File name="Fichier" fileName="c:/Temp/appProjetBd.log">
 			<PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
 		</File>
 	</Appenders>

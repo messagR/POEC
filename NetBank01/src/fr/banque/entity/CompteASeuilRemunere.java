@@ -1,15 +1,11 @@
 package fr.banque.entity;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import fr.banque.exception.BanqueException;
 
 class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil, ICompteASeuilRemunere {
 	private static final long serialVersionUID = 1L;
-	private final static Logger LOG = LogManager.getLogger();
 
-	private CompteASeuil compteASeuil;
+	private double seuil;
 
 	public CompteASeuilRemunere() {
 		this(-1, "", 0.0);
@@ -17,28 +13,27 @@ class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil, ICom
 
 	public CompteASeuilRemunere(int id, String libelle, double solde) {
 		super(id, libelle, solde);
+		this.setSeuil(0);
 	}
 
 	public CompteASeuilRemunere(int id, String libelle, double solde, double taux) {
 		super(id, libelle, solde, taux);
+		this.setSeuil(0);
 	}
 
 	public CompteASeuilRemunere(int id, String libelle, double solde, double seuil, double taux) {
 		super(id, libelle, solde, taux);
-		this.compteASeuil = new CompteASeuil(id, libelle, solde, seuil);
+		this.setSeuil(seuil);
 	}
 
 	@Override
 	public double getSeuil() {
-		return this.compteASeuil.getSeuil();
+		return this.seuil;
 	}
 
 	@Override
-	public void setSeuil(double seuil) throws BanqueException {
-		if (seuil > this.getSolde()) {
-			CompteASeuilRemunere.LOG.warn("Le seuil du compte " + this.getNumero() + " est supérieur a son solde");
-		}
-		this.compteASeuil.setSeuil(seuil);
+	public void setSeuil(double unSeuil) {
+		this.seuil = unSeuil;
 	}
 
 	@Override

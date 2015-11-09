@@ -9,7 +9,7 @@
 	<body>
 		<h1>Ma banque</h1>
 		<br/><br/>
-		<form action='./ProjetServlet/ServletClient' method='post'>
+		<form action='./projetServlet/ServletClient' method='post'>
 			<div style="cursor:pointer;">Voir les clients en Servlet uniquement</div>
 		</form>
 		<br/><br/>
@@ -17,8 +17,12 @@
 			<div style="cursor:pointer;">Voir les clients en JSP uniquement</div>
 		</form>
 		<br/><br/>
-		<form action='./ServletClient' method='post'>
+		<form action='./projetServletJSP/ServletClient' method='post'>
 			<div style="cursor:pointer;">Voir les clients en Servlet et JSP</div>
+		</form>
+		<br/><br/>
+		<form action='./ServletClient' method='post'>
+			<div style="cursor:pointer;">Voir les clients en Servlet et JSP avec tagLibs</div>
 		</form>
 		<script>
 			$('div').click(function(){

@@ -1,0 +1,124 @@
+/*------------------------------------------------
+Styles de
+
+balise, .class, #id
+
+tables des matieres
+
+	- Contenu general
+	- Typographie
+	- Navigation
+	- Entete (header)
+	- Images et medias
+	- Pied de page (footer)
+	- Media queries
+
+*/
+
+/* Contenu general
+-------------------------------------------------*/
+h1{
+	padding:80px 0px;
+	background-color:#95B2BB;
+}
+
+.container{
+	min-width:800px;
+}
+
+.contenu{
+	margin-top:50px;
+	text-align:center;
+    vertical-align : middle;
+	min-height: 134px;
+}
+
+p{margin-bottom:5px;}
+
+table{
+	margin: auto;
+	margin-bottom: 20px;
+}
+
+table tr td{
+	text-align:center;
+}
+
+table thead tr{
+	background-color:#95B2BB;
+	color:#FFD8A8;
+}
+
+form{margin:0px;}
+
+select{
+	height:30px;
+	padding-left:0px;
+}
+
+input[type=button]{
+	font-size: 1.2em;
+	background-color:#95B2BB;
+	color:#FFD8A8;
+}
+
+input[type=text]{
+	color: #777777;
+}
+
+/* Typographie
+-------------------------------------------------*/
+body{
+    font-family: Verdana,Arial,Times New Roman,Sans-Serif;
+	font-size: 1.4em;
+	font-weight: bold;
+	color: #777777;
+}
+
+h1{
+	font-size: 3em;
+	text-shadow: 7px 7px 10px #bbb;
+	color: #FFD8A8;
+}
+
+h2{	
+	font-size:2.2em;
+}
+
+h3{	
+	font-size:1.4em;
+	color:red;
+}
+
+footer{font-size:1em;}
+
+.copyright p{margin-top:1%;}
+
+input, textarea{color:#000;}
+
+/* Navigation
+-------------------------------------------------*/
+a{
+	text-decoration: none;
+	color: #59777F;
+}
+
+a:hover{font-size: 0.9em;}
+
+.visite:hover{font-size: 0.9em;}
+
+/* Entete (header)
+-------------------------------------------------*/
+header{text-align:center;}
+
+/* Images et medias
+-------------------------------------------------*/
+
+img{max-width: 100%;}
+
+/* Pied de page (footer)
+-------------------------------------------------*/
+footer{text-align: center;}
+
+/* Media queries
+-------------------------------------------------*/

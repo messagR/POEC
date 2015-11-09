@@ -120,7 +120,7 @@ public final class Factory {
 			break;
 		case 4:
 			type = (Class<?>) args[0];
-			id = (int) args[1];
+			id = (Integer) args[1];
 			libelle = (String) args[2];
 			solde = (Double) args[3];
 			if (type == ICompte.class) {
@@ -135,7 +135,7 @@ public final class Factory {
 			break;
 		case 5:
 			type = (Class<?>) args[0];
-			id = (int) args[1];
+			id = (Integer) args[1];
 			libelle = (String) args[2];
 			solde = (Double) args[3];
 			if (type == ICompteRemunere.class) {
@@ -159,7 +159,7 @@ public final class Factory {
 			break;
 		case 6:
 			type = (Class<?>) args[0];
-			id = (int) args[1];
+			id = (Integer) args[1];
 			libelle = (String) args[2];
 			solde = (Double) args[3];
 			seuil = (Double) args[4];

@@ -1,19 +1,21 @@
-<%@page import="fr.web.ServletOperation"%>
+<%@page import="fr.web.projetServlet.ServletOperation"%>
 <%@page import="java.io.IOException,java.io.InputStream,java.io.PrintWriter,java.sql.SQLException,java.text.SimpleDateFormat,java.util.List,java.util.Properties"%>
 <%@page import="javax.servlet.Servlet,javax.servlet.ServletConfig,javax.servlet.ServletException,javax.servlet.annotation.WebServlet,javax.servlet.http.HttpServlet,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse"%>
 <%@page import="fr.banque.entity.IOperation,fr.banque.exception.CompteIntrouvableException,projetBd.AccesDB"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	<%
+		int idCompte = Integer.parseInt(request.getParameter("id"));
+	%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-<link rel='stylesheet' href='css/styles.css' >
+<title>Les operations du compte n°<%=idCompte %> en JSP</title>
+<link rel='stylesheet' href='../css/styles.css' >
 </head>
 <body>
 	<%
-		int idCompte = Integer.parseInt(request.getParameter("id"));
 		Properties mesProperties = new Properties();
 		// chemin a partir du src
 		try (InputStream is = ServletOperation.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
@@ -40,7 +42,7 @@
 				listeOperation = utilDb.rechercherOp(idCompte);
 				if (!listeOperation.isEmpty()) {
 	%>
-		<h1>Les operations du compte n°<%=idCompte %></h1>
+		<h1>Les operations du compte n°<%=idCompte %> en JSP</h1>
 		<table border=1>
 			<tr style='background-color:#999;color:#000;'>
 				<td>Date</td>

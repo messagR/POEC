@@ -65,13 +65,13 @@ public class ServletOperation extends HttpServlet {
 		}
 		// Nom du driver pour acceder a la base de donnee.
 		// Lire la documentation associee a sa base de donnees pour le connaitre
-		final String utilDbDriver = mesProperties.getProperty("utilDb.driver");
+		String utilDbDriver = mesProperties.getProperty("utilDb.driver");
 		// url d'acces a la base de donnees
-		final String utilDbUrl = mesProperties.getProperty("utilDb.url");
+		String utilDbUrl = mesProperties.getProperty("utilDb.url");
 		// login d'acces a la base de donnees
-		final String utilDbLogin = mesProperties.getProperty("utilDb.login");
+		String utilDbLogin = mesProperties.getProperty("utilDb.login");
 		// mot de passe d'acces a la base de donnees
-		final String utilDbPassword = mesProperties.getProperty("utilDb.password");
+		String utilDbPassword = mesProperties.getProperty("utilDb.password");
 
 		AccesDB utilDb = null;
 		try {
@@ -83,6 +83,7 @@ public class ServletOperation extends HttpServlet {
 				idCompte = null;
 			}
 		} catch (SQLException e1) {
+			request.setAttribute("erreur", "Erreur dans la servlet (" + e1.getMessage() + ")");
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();

@@ -1,5 +1,8 @@
 package fr.banque;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.banque.entity.Factory;
 import fr.banque.entity.IClient;
 import fr.banque.entity.ICompte;
@@ -7,18 +10,24 @@ import fr.banque.entity.ICompteASeuil;
 import fr.banque.entity.ICompteASeuilRemunere;
 import fr.banque.entity.ICompteRemunere;
 import fr.banque.exception.BanqueException;
+import fr.banque.log.CustomMessage;
 
 public class Run {
+	private final static Logger LOG = LogManager.getLogger();
 
 	public static void main(String[] args) {
+		long start = System.currentTimeMillis();
+		Run.LOG.info("-- Start --");
 
 		Factory f = Factory.getInstance();
 		IClient[] listeClient = new IClient[5];
+		Run.LOG.trace("Creation des clients");
 		listeClient[0] = f.creerClient(1, "DUPONT", "Jean", 20, null, null, null, null, 0, 0, null);
 		listeClient[1] = f.creerClient(2, "DUPOND", "Jeanne", 25, null, null, null, null, 0, 0, null);
 		listeClient[2] = f.creerClient(3, "DURANT", "Paul", 30, null, null, null, null, 0, 0, null);
 		listeClient[3] = f.creerClient(4, "DURAND", "Paula", 35, null, null, null, null, 0, 0, null);
 
+		Run.LOG.trace("Creation des comptes du client");
 		ICompte compte = null;
 		ICompteRemunere compteRemunere = null;
 		ICompteASeuil compteASeuil = null;
@@ -28,7 +37,8 @@ public class Run {
 			listeClient[0].ajouterCompte(compte);
 			compte.ajouter(100d);
 		} catch (BanqueException e1) {
-			e1.printStackTrace();
+			Run.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, f.getDernierNumeroCompte(),
+					"Erreur lors de la création du compte ", e1));
 		}
 
 		compte = null;

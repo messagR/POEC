@@ -1,44 +1,27 @@
-<%@page import="fr.web.ServletClient"%>
-<%@page import="java.io.IOException,java.io.InputStream,java.io.PrintWriter,java.sql.SQLException,java.util.List,java.util.Properties"%>
-<%@page import="javax.servlet.Servlet,javax.servlet.ServletConfig,javax.servlet.ServletException,javax.servlet.annotation.WebServlet,javax.servlet.http.HttpServlet,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse"%>
-<%@page import="fr.banque.entity.IClient,fr.banque.entity.ICompte,fr.banque.entity.ICompteASeuil,fr.banque.entity.ICompteRemunere,projetBd.AccesDB"%>
+<%@page import="fr.banque.entity.ICompteASeuil,fr.banque.entity.ICompteRemunere,fr.banque.entity.ICompte,fr.banque.entity.IClient"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Insert title here</title>
-		<link rel='stylesheet' href='css/styles.css' >
-		<script type='text/javascript' src='JS/jquery.min.js'></script>
+		<title>Les clients en Servlet et JSP</title>
+		<link rel='stylesheet' href='../css/styles.css' >
+		<script type='text/javascript' src='../JS/jquery.min.js'></script>
 	</head>
 	<body>
 	<%
-		Properties mesProperties = new Properties();
-		// chemin a partir du src
-		try (InputStream is = ServletClient.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
-			mesProperties.load(is);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// Nom du driver pour acceder a la base de donnee.
-		// Lire la documentation associee a sa base de donnees pour le connaitre
-		final String utilDbDriver = mesProperties.getProperty("utilDb.driver");
-		// url d'acces a la base de donnees
-		final String utilDbUrl = mesProperties.getProperty("utilDb.url");
-		// login d'acces a la base de donnees
-		final String utilDbLogin = mesProperties.getProperty("utilDb.login");
-		// mot de passe d'acces a la base de donnees
-		final String utilDbPassword = mesProperties.getProperty("utilDb.password");
-	
-		AccesDB utilDb = null;
-		try {
-			utilDb = new AccesDB(utilDbDriver);
-			utilDb.seConnecter(utilDbLogin, utilDbPassword, utilDbUrl);
-			List<IClient> listeClient = utilDb.listeClient();
-			if (!listeClient.isEmpty()) {
+		String erreur = (String) request.getAttribute("erreur");
+		if(erreur!=null){
 	%>
-		<h1>Les clients</h1>
+      	<h3><%=erreur %></h3>
+	<%
+		}
+		List<IClient> listeClient = (List<IClient>) request.getAttribute("ListeClient");
+		if(! listeClient.isEmpty()){
+	%>
+		<h1>Les clients en Servlet et JSP</h1>
 		<table border=1>
 			<tr style='background-color:#999;color:#000;'>
 				<td>Nom</td>
@@ -55,7 +38,7 @@
 				<td><%=client.getPrenom() %></td>
 				<td><%=client.getAge() %></td>
 				<td>
-					<form action='./Compte.jsp' method='post'>
+					<form action='./ServletCompte' method='post'>
 						<input type='hidden' name='id' value='<%=client.getNumero() %>'>
 						<input type='submit' value='Voir ses comptes'>
 					</form>
@@ -98,7 +81,7 @@
 							<td>Pas de Seuil</td>
 	<%							}%>
 							<td>
-								<form action='./Operation.jsp' method='post' name='formulaire'>
+								<form action='./ServletOperation' method='post' name='formulaire'>
 									<input type='hidden' name='id' value='<%=compte.getNumero() %>'>
 									<div class='operation' style='cursor:pointer;'>Voir ses operations</div>
 								</form>
@@ -120,13 +103,6 @@
 		<h1>Aucun client</h1>
 	<%	
 			}
-		} catch (SQLException e1) {
-			out.write(e1.getMessage());
-		} finally {
-			if (utilDb != null) {
-				utilDb.seDeconnecter();
-			}
-		}
 	%>
 		<script>
 			$(document).ready(function(){

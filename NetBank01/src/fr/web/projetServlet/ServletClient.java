@@ -1,4 +1,4 @@
-package fr.web;
+package fr.web.projetServlet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,14 +24,14 @@ import projetBd.AccesDB;
 /**
  * Servlet implementation class ServletClient
  */
-@WebServlet("/ProjetServlet/ServletClient")
-public class ServletClient2 extends HttpServlet {
+@WebServlet("/projetServlet/ServletClient")
+public class ServletClient extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ServletClient2() {
+	public ServletClient() {
 		super();
 	}
 
@@ -58,20 +58,20 @@ public class ServletClient2 extends HttpServlet {
 			throws ServletException, IOException {
 		Properties mesProperties = new Properties();
 		// chemin a partir du src
-		try (InputStream is = ServletClient2.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
+		try (InputStream is = ServletClient.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
 			mesProperties.load(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// Nom du driver pour acceder a la base de donnee.
 		// Lire la documentation associee a sa base de donnees pour le connaitre
-		final String utilDbDriver = mesProperties.getProperty("utilDb.driver");
+		String utilDbDriver = mesProperties.getProperty("utilDb.driver");
 		// url d'acces a la base de donnees
-		final String utilDbUrl = mesProperties.getProperty("utilDb.url");
+		String utilDbUrl = mesProperties.getProperty("utilDb.url");
 		// login d'acces a la base de donnees
-		final String utilDbLogin = mesProperties.getProperty("utilDb.login");
+		String utilDbLogin = mesProperties.getProperty("utilDb.login");
 		// mot de passe d'acces a la base de donnees
-		final String utilDbPassword = mesProperties.getProperty("utilDb.password");
+		String utilDbPassword = mesProperties.getProperty("utilDb.password");
 
 		AccesDB utilDb = null;
 		PrintWriter out = response.getWriter();
@@ -79,16 +79,18 @@ public class ServletClient2 extends HttpServlet {
 			utilDb = new AccesDB(utilDbDriver);
 			utilDb.seConnecter(utilDbLogin, utilDbPassword, utilDbUrl);
 			StringBuffer sb = new StringBuffer();
+			sb.append(
+					"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
 			sb.append("<html>\n");
 			sb.append("	<head>\n");
-			sb.append("		<title>Tous les clients</title>\n");
-			sb.append("		<link rel='stylesheet' href='css/styles.css' >\n");
+			sb.append("		<title>Tous les clients en Servlet</title>\n");
+			sb.append("		<link rel='stylesheet' href='../css/styles.css' >\n");
 			sb.append("	</head>\n");
 			sb.append("	<body>\n");
-			sb.append("		<script type='text/javascript' src='JS/jquery.min.js'></script>\n");
+			sb.append("		<script type='text/javascript' src='../JS/jquery.min.js'></script>\n");
 			List<IClient> listeClient = utilDb.listeClient();
 			if (!listeClient.isEmpty()) {
-				sb.append("		<h1>Les clients</h1>\n");
+				sb.append("		<h1>Les clients en Servlet</h1>\n");
 				sb.append("		<table border=1>\n");
 				sb.append("			<tr style='background-color:#999;color:#000;'>\n");
 				sb.append("				<td>Nom</td>\n");
@@ -103,7 +105,7 @@ public class ServletClient2 extends HttpServlet {
 					sb.append("				<td>").append(client.getPrenom()).append("</td>\n");
 					sb.append("				<td>").append(client.getAge()).append("</td>\n");
 					sb.append("				<td>\n");
-					sb.append("					<form action='./ServletCompte2' method='post'>\n");
+					sb.append("					<form action='./ServletCompte' method='post'>\n");
 					sb.append("				  		<input type='hidden' name='id' value='" + client.getNumero()
 					+ "'>\n");
 					sb.append("				  		<input type='submit' value='Voir ses comptes'>\n");
@@ -139,7 +141,7 @@ public class ServletClient2 extends HttpServlet {
 								}
 								sb.append("				<td>\n");
 								sb.append(
-										"					<form action='./ServletOperation2' method='post' name='formulaire'>\n");
+										"					<form action='./ServletOperation' method='post' name='formulaire'>\n");
 								sb.append("				  		<input type='hidden' name='id' value='"
 										+ compte.getNumero() + "'>\n");
 								sb.append(

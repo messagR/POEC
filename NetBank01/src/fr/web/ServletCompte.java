@@ -3,6 +3,7 @@ package fr.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -15,7 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fr.banque.entity.BeanCompte;
 import fr.banque.entity.ICompte;
+import fr.banque.entity.ICompteASeuil;
+import fr.banque.entity.ICompteRemunere;
 import fr.banque.exception.ClientIntrouvableException;
 import projetBd.AccesDB;
 
@@ -53,7 +57,7 @@ public class ServletCompte extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Integer idClient = new Integer(request.getParameter("id"));
-		List<ICompte> listeCompte = null;
+		List<BeanCompte> listeCompte = null;
 		Properties mesProperties = new Properties();
 		// chemin a partir du src
 		try (InputStream is = ServletCompte.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
@@ -63,24 +67,41 @@ public class ServletCompte extends HttpServlet {
 		}
 		// Nom du driver pour acceder a la base de donnee.
 		// Lire la documentation associee a sa base de donnees pour le connaitre
-		final String utilDbDriver = mesProperties.getProperty("utilDb.driver");
+		String utilDbDriver = mesProperties.getProperty("utilDb.driver");
 		// url d'acces a la base de donnees
-		final String utilDbUrl = mesProperties.getProperty("utilDb.url");
+		String utilDbUrl = mesProperties.getProperty("utilDb.url");
 		// login d'acces a la base de donnees
-		final String utilDbLogin = mesProperties.getProperty("utilDb.login");
+		String utilDbLogin = mesProperties.getProperty("utilDb.login");
 		// mot de passe d'acces a la base de donnees
-		final String utilDbPassword = mesProperties.getProperty("utilDb.password");
+		String utilDbPassword = mesProperties.getProperty("utilDb.password");
 
 		AccesDB utilDb = null;
 		try {
 			utilDb = new AccesDB(utilDbDriver);
 			utilDb.seConnecter(utilDbLogin, utilDbPassword, utilDbUrl);
 			try {
-				listeCompte = utilDb.listeCompte(idClient);
+				List<ICompte> listeICompte = utilDb.listeCompte(idClient);
+				if (!listeICompte.isEmpty()) {
+					listeCompte = new ArrayList<BeanCompte>();
+					for (ICompte compte : listeICompte) {
+						BeanCompte beanCompte = new BeanCompte(compte.getNumero(), compte.getLibelle(),
+								compte.getSolde());
+						if (compte instanceof ICompteRemunere) {
+							ICompteRemunere compteRem = (ICompteRemunere) compte;
+							beanCompte.setTaux(compteRem.getTaux());
+						}
+						if (compte instanceof ICompteASeuil) {
+							ICompteASeuil compteASeuil = (ICompteASeuil) compte;
+							beanCompte.setSeuil(compteASeuil.getSeuil());
+						}
+						listeCompte.add(beanCompte);
+					}
+				}
 			} catch (ClientIntrouvableException e) {
 				idClient = null;
 			}
 		} catch (SQLException e1) {
+			request.setAttribute("erreur", "Erreur dans la servlet (" + e1.getMessage() + ")");
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();

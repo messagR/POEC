@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import fr.banque.entity.IClient;
 import fr.banque.entity.ICompte;
-import fr.banque.entity.IOperation;
 import fr.banque.exception.BanqueException;
 import fr.banque.exception.ClientIntrouvableException;
 import fr.banque.exception.CompteIntrouvableException;
@@ -144,7 +143,6 @@ public class TestUtilBd
 
 	@Test
 	public void testerFaireVirementReussie() {
-		List<IOperation> listeOperation = null;
 		double ancienSoldeSource = 0;
 		double ancienSoldeDest = 0;
 		double nouveauSoldeSource = 0;
@@ -152,15 +150,12 @@ public class TestUtilBd
 		try {
 			ancienSoldeSource = this.db.rechercherCompte(15).getSolde();
 			ancienSoldeDest = this.db.rechercherCompte(12).getSolde();
-			listeOperation = this.db.faireVirement(15, 12, 50.0);
+			this.db.faireVirement(15, 12, 50.0);
 			nouveauSoldeSource = this.db.rechercherCompte(15).getSolde();
 			nouveauSoldeDest = this.db.rechercherCompte(12).getSolde();
 		} catch (Exception e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		}
-		Assert.assertNotNull("Virement reussi car listeOperation n'est pas null", listeOperation);
-		Assert.assertTrue("Virement reussi car listeOperation n'est pas null et n'est pas vide",
-				listeOperation.size() > 0);
 		Assert.assertTrue("Virement reussi car nouveauSoldeSource = ancienSoldeSource - 50",
 				nouveauSoldeSource == (ancienSoldeSource - 50));
 		Assert.assertTrue("Virement reussi car nouveauSoldeDest = ancienSoldeDest + 50",
@@ -169,47 +164,40 @@ public class TestUtilBd
 
 	@Test(expected = BanqueException.class)
 	public void testerFaireVirementRate() throws BanqueException {
-		List<IOperation> listeOperation = null;
 		try {
-			listeOperation = this.db.faireVirement(14, 12, 50.0);
+			this.db.faireVirement(14, 12, 50.0);
 		} catch (SQLException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		} catch (CompteIntrouvableException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		}
-		Assert.assertNull("ListeOperation est null car montant trop élevé a virer", listeOperation);
 	}
 
 	public void testerFaireVirementCptSourceInvalid() throws CompteIntrouvableException {
-		List<IOperation> listeOperation = null;
 		try {
-			listeOperation = this.db.faireVirement(-1, 12, 50.0);
+			this.db.faireVirement(-1, 12, 50.0);
 		} catch (SQLException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		} catch (BanqueException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		}
-		Assert.assertNull("ListeOperation est null car compte source introuvable", listeOperation);
 	}
 
 	@Test(expected = CompteIntrouvableException.class)
 	public void testerFaireVirementCptDestInvalid() throws CompteIntrouvableException {
-		List<IOperation> listeOperation = null;
 		try {
-			listeOperation = this.db.faireVirement(15, -1, 50.0);
+			this.db.faireVirement(15, -1, 50.0);
 		} catch (SQLException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		} catch (BanqueException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		}
-		Assert.assertNull("ListeOperation est null car compte destination introuvable", listeOperation);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testerFaireVirementSomInvalid() throws IllegalArgumentException {
-		List<IOperation> listeOperation = null;
 		try {
-			listeOperation = this.db.faireVirement(15, 12, -50.0);
+			this.db.faireVirement(15, 12, -50.0);
 		} catch (SQLException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		} catch (BanqueException e) {
@@ -217,7 +205,6 @@ public class TestUtilBd
 		} catch (CompteIntrouvableException e) {
 			Assert.fail("Erreur SQL (" + e.getMessage() + ")");
 		}
-		Assert.assertNull("ListeOperation est null car montant invalid", listeOperation);
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-package fr.web;
+package fr.web.projetServlet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,14 +24,14 @@ import projetBd.AccesDB;
 /**
  * Servlet implementation class ServletCompte
  */
-@WebServlet("/ServletCompte2")
-public class ServletCompte2 extends HttpServlet {
+@WebServlet("/projetServlet/ServletCompte")
+public class ServletCompte extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ServletCompte2() {
+	public ServletCompte() {
 		super();
 	}
 
@@ -57,20 +57,20 @@ public class ServletCompte2 extends HttpServlet {
 		int idClient = Integer.parseInt(request.getParameter("id"));
 		Properties mesProperties = new Properties();
 		// chemin a partir du src
-		try (InputStream is = ServletCompte2.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
+		try (InputStream is = ServletCompte.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
 			mesProperties.load(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		// Nom du driver pour acceder a la base de donnee.
 		// Lire la documentation associee a sa base de donnees pour le connaitre
-		final String utilDbDriver = mesProperties.getProperty("utilDb.driver");
+		String utilDbDriver = mesProperties.getProperty("utilDb.driver");
 		// url d'acces a la base de donnees
-		final String utilDbUrl = mesProperties.getProperty("utilDb.url");
+		String utilDbUrl = mesProperties.getProperty("utilDb.url");
 		// login d'acces a la base de donnees
-		final String utilDbLogin = mesProperties.getProperty("utilDb.login");
+		String utilDbLogin = mesProperties.getProperty("utilDb.login");
 		// mot de passe d'acces a la base de donnees
-		final String utilDbPassword = mesProperties.getProperty("utilDb.password");
+		String utilDbPassword = mesProperties.getProperty("utilDb.password");
 
 		AccesDB utilDb = null;
 		PrintWriter out = response.getWriter();
@@ -78,17 +78,19 @@ public class ServletCompte2 extends HttpServlet {
 			utilDb = new AccesDB(utilDbDriver);
 			utilDb.seConnecter(utilDbLogin, utilDbPassword, utilDbUrl);
 			StringBuffer sb = new StringBuffer();
+			sb.append(
+					"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
 			sb.append("<html>\n");
 			sb.append("	<head>\n");
-			sb.append("		<title>Compte du client n°" + idClient + "</title>\n");
-			sb.append("		<link rel='stylesheet' href='css/styles.css' >\n");
+			sb.append("		<title>Compte du client n°" + idClient + " en Servlet</title>\n");
+			sb.append("		<link rel='stylesheet' href='../css/styles.css' >\n");
 			sb.append("	</head>\n");
 			sb.append("	<body>\n");
 			List<ICompte> listeCompte = null;
 			try {
 				listeCompte = utilDb.listeCompte(idClient);
 				if (!listeCompte.isEmpty()) {
-					sb.append("		<h1>Les comptes du client n°" + idClient + "</h1>\n");
+					sb.append("		<h1>Les comptes du client n°" + idClient + " en Servlet</h1>\n");
 					sb.append("		<table border=1>\n");
 					sb.append("			<tr style='background-color:#999;color:#000;'>\n");
 					sb.append("				<td>Solde</td>\n");
@@ -112,7 +114,7 @@ public class ServletCompte2 extends HttpServlet {
 							sb.append("				<td>Pas de Seuil</td>\n");
 						}
 						sb.append("				<td>\n");
-						sb.append("					<form action='./ServletOperation2' method='post'>\n");
+						sb.append("					<form action='./ServletOperation' method='post'>\n");
 						sb.append("				  		<input type='hidden' name='id' value='" + compte.getNumero()
 						+ "'>\n");
 						sb.append(

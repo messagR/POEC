@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.banque.entity.Factory;
 import fr.banque.entity.IClient;
 import fr.banque.entity.ICompte;
@@ -31,12 +34,14 @@ import fr.banque.exception.BanqueException;
 import fr.banque.exception.ChampsVidesException;
 import fr.banque.exception.ClientIntrouvableException;
 import fr.banque.exception.CompteIntrouvableException;
+import fr.banque.log.CustomMessage;
 
 /**
  * @author PC
  *
  */
 public class AccesDB {
+	private final static Logger LOG = LogManager.getLogger();
 
 	private static Connection connexion;
 	// private final static String DRIVER = "com.mysql.jdbc.Driver";
@@ -54,12 +59,16 @@ public class AccesDB {
 		try {
 			Class.forName(driver);
 		} catch (Throwable cnf) {
-			throw new SQLException("Impossible de charger le driver '" + driver + "'" + cnf);
+			throw new SQLException("Impossible de charger le driver '" + driver + "' " + cnf);
 		}
 	}
 
-	public void seConnecter(String unLogin, String unPassword, String uneUrl) throws SQLException {
-		AccesDB.connexion = DriverManager.getConnection(uneUrl, unLogin, unPassword);
+	public void seConnecter(String unLogin, String unPassword, String uneUrl) {
+		try {
+			AccesDB.connexion = DriverManager.getConnection(uneUrl, unLogin, unPassword);
+		} catch (SQLException e) {
+			AccesDB.LOG.error("Erreur lors de la creation de la connection ", e);
+		}
 	}
 
 	public void seDeconnecter() {
@@ -67,7 +76,7 @@ public class AccesDB {
 			try {
 				AccesDB.connexion.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				AccesDB.LOG.error("Erreur lors de la connection", e);
 			}
 		}
 	}
@@ -127,14 +136,16 @@ public class AccesDB {
 							try {
 								compte = f.creerCompte(type, idCompte, libelleCompte, solde);
 							} catch (BanqueException e) {
-								e.printStackTrace();
+								AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+										"Erreur lors de la creation du compte ", e));
 							}
 						} else {
 							type = ICompteRemunere.class;
 							try {
 								compte = f.creerCompte(type, idCompte, libelleCompte, solde, taux);
 							} catch (BanqueException e) {
-								e.printStackTrace();
+								AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+										"Erreur lors de la creation du compte ", e));
 							}
 						}
 					} else {
@@ -144,21 +155,24 @@ public class AccesDB {
 							try {
 								compte = f.creerCompte(type, idCompte, libelleCompte, solde, seuil);
 							} catch (BanqueException e) {
-								e.printStackTrace();
+								AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+										"Erreur lors de la creation du compte ", e));
 							}
 						} else {
 							type = ICompteASeuilRemunere.class;
 							try {
 								compte = f.creerCompte(type, idCompte, libelleCompte, solde, seuil, taux);
 							} catch (BanqueException e) {
-								e.printStackTrace();
+								AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+										"Erreur lors de la creation du compte ", e));
 							}
 						}
 					}
 					try {
 						client.ajouterCompte(compte);
 					} catch (BanqueException e) {
-						e.printStackTrace();
+						AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.CLIENT, client.getNumero(),
+								"Erreur lors de l'ajout du compte " + compte.getNumero(), e));
 					}
 
 					requete = "select op.* from utilisateur as util "
@@ -183,34 +197,34 @@ public class AccesDB {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors du listing client", e);
 		} finally {
 			if (resClient != null) {
 				try {
 					resClient.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (steClient != null) {
 				try {
 					steClient.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 			if (resCompte != null) {
 				try {
 					resCompte.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (steCompte != null) {
 				try {
 					steCompte.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
@@ -234,27 +248,67 @@ public class AccesDB {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de la recuperation utilisateur", e);
 		} finally {
 			if (resClient != null) {
 				try {
 					resClient.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (steClient != null) {
 				try {
 					steClient.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
 	}
 
-	public IClient authentifier(String login, String password) throws SQLException,
-	ClientIntrouvableException, ChampsVidesException {
+	public boolean verifieCompteUtilisateur(int userID, int compteID) throws CompteIntrouvableException {
+		boolean retour = true;
+
+		PreparedStatement ste = null;
+		ResultSet res = null;
+		try {
+			String requete = "select * from compte where utilisateurId = ? and id = ?";
+			ste = AccesDB.connexion.prepareStatement(requete);
+			ste.setInt(1, userID);
+			ste.setInt(2, compteID);
+			res = ste.executeQuery();
+
+			if (!res.next()) {
+				retour = false;
+				throw new CompteIntrouvableException(
+						"Le compte n°" + compteID + " n'appartient pas au client n°" + userID);
+			}
+
+		} catch (SQLException e) {
+			AccesDB.LOG.error("Erreur lors de la recuperation du compte", e);
+		} finally {
+			if (res != null) {
+				try {
+					res.close();
+				} catch (SQLException e) {
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
+				}
+			}
+			if (ste != null) {
+				try {
+					ste.close();
+				} catch (SQLException e) {
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
+				}
+			}
+		}
+		return retour;
+	}
+
+	public IClient authentifier(String login, String password)
+			throws SQLException,
+			ClientIntrouvableException, ChampsVidesException {
 		IClient client = null;
 
 		if (((login == null) || (login == "")) && ((password == null) || (password == ""))) {
@@ -297,21 +351,21 @@ public class AccesDB {
 				throw new ClientIntrouvableException("Erreur d'authentification");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// AccesDB.LOG.error("Erreur lors de l'authentification", e);
 			throw new SQLException(e);
 		} finally {
 			if (resultat != null) {
 				try {
 					resultat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
@@ -363,21 +417,21 @@ public class AccesDB {
 				throw new ClientIntrouvableException("Client introuvable");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// AccesDB.LOG.error("Erreur lors de la recuperation client", e);
 			throw new SQLException(e);
 		} finally {
 			if (resultat != null) {
 				try {
 					resultat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
@@ -417,14 +471,16 @@ public class AccesDB {
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					} else {
 						type = ICompteRemunere.class;
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde, taux);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					}
 				} else {
@@ -434,34 +490,36 @@ public class AccesDB {
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde, seuil);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					} else {
 						type = ICompteASeuilRemunere.class;
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde, seuil, taux);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					}
 				}
 				listeCompte.add(compte);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de listing de compte", e);
 		} finally {
 			if (resultat != null) {
 				try {
 					resultat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
@@ -486,20 +544,20 @@ public class AccesDB {
 				System.out.println(idCompte);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de la recuperation du client", e);
 		} finally {
 			if (resultat != null) {
 				try {
 					resultat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
@@ -533,14 +591,16 @@ public class AccesDB {
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					} else {
 						type = ICompteRemunere.class;
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde, taux);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					}
 				} else {
@@ -550,14 +610,16 @@ public class AccesDB {
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde, seuil);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					} else {
 						type = ICompteASeuilRemunere.class;
 						try {
 							compte = f.creerCompte(type, idCompte, libelleCompte, solde, seuil, taux);
 						} catch (BanqueException e) {
-							e.printStackTrace();
+							AccesDB.LOG.error(new CustomMessage(CustomMessage.TypeCible.COMPTE, idCompte,
+									"Erreur lors de la creation du compte ", e));
 						}
 					}
 				}
@@ -565,20 +627,20 @@ public class AccesDB {
 				throw new CompteIntrouvableException("Compte introuvable");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de la recuperation du compte", e);
 		} finally {
 			if (resultat != null) {
 				try {
 					resultat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
@@ -588,7 +650,7 @@ public class AccesDB {
 	/**
 	 * @param cpID
 	 * @param args
-	 *            (datedeb, datefin, creditdebit
+	 *            (datedeb, datefin, creditdebit -> true: > 0, false < 0)
 	 * @return
 	 * @throws SQLException
 	 * @throws CompteIntrouvableException
@@ -635,7 +697,7 @@ public class AccesDB {
 					listeTrous.add((Date) args[1]);
 				}
 				if (args[2] instanceof Boolean) {
-					if ((boolean) args[2]) {
+					if ((Boolean) args[2]) {
 						requete += " and montant > 0 ";
 					} else {
 						requete += " and montant < 0 ";
@@ -643,6 +705,7 @@ public class AccesDB {
 				}
 				break;
 			}
+			requete += " order by date DESC";
 			ste = AccesDB.connexion.prepareStatement(requete);
 			ste.setInt(1, compte.getNumero());
 			int i = 0;
@@ -665,20 +728,20 @@ public class AccesDB {
 				listeOperation.add(operation);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de la recuperation des operations", e);
 		} finally {
 			if (resultat != null) {
 				try {
 					resultat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
@@ -704,26 +767,26 @@ public class AccesDB {
 				System.out.println(idOperation);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de la recuperation de l'operation", e);
 		} finally {
 			if (resultat != null) {
 				try {
 					resultat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du resultat", e);
 				}
 			}
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
 	}
 
-	public List<IOperation> faireVirement(int cpSrc, int cpDest, double som)
+	public boolean faireVirement(int cpSrc, int cpDest, double som)
 			throws SQLException, BanqueException, IllegalArgumentException, CompteIntrouvableException {
 		if (som <= 0) {
 			throw new IllegalArgumentException("Somme incorrecte");
@@ -739,7 +802,6 @@ public class AccesDB {
 
 		PreparedStatement ste = null;
 		Factory f = Factory.getInstance();
-		List<IOperation> listeOperation = new ArrayList<IOperation>();
 		Date date = new Date();
 		try {
 			AccesDB.connexion.setAutoCommit(false);
@@ -753,14 +815,11 @@ public class AccesDB {
 			ste.executeUpdate();
 			ResultSet resultat = ste.getGeneratedKeys();
 			resultat.next();
-			IOperation operation = f.creerOperation(resultat.getInt(1), "Virement vers "
-					+ cpDest, som, date);
-			listeOperation.add(operation);
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 
@@ -773,7 +832,7 @@ public class AccesDB {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 
@@ -786,14 +845,11 @@ public class AccesDB {
 			ste.executeUpdate();
 			resultat = ste.getGeneratedKeys();
 			resultat.next();
-			operation = f.creerOperation(resultat.getInt(1), "Virement vers " + cpDest,
-					som, date);
-			listeOperation.add(operation);
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 
@@ -808,20 +864,20 @@ public class AccesDB {
 			try {
 				AccesDB.connexion.rollback();
 			} catch (SQLException e1) {
-				e1.printStackTrace();
+				AccesDB.LOG.error("Erreur lors de l'annulation de la sauvegarde de la base", e1);
 			}
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors du virement", e);
 			throw new SQLException(e);
 		} finally {
 			if (ste != null) {
 				try {
 					ste.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					AccesDB.LOG.error("Erreur lors de la fermeture du statement", e);
 				}
 			}
 		}
-		return listeOperation;
+		return true;
 	}
 
 	public static void main(String[] args) {
@@ -831,7 +887,7 @@ public class AccesDB {
 		try (InputStream is = ClassLoader.getSystemResourceAsStream("mesPreferences.properties")) {
 			mesProperties.load(is);
 		} catch (IOException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de la recuperation du fichier mesPreferences.properties ", e);
 		}
 		// File fichier = new
 		// File("C:/Users/PC/git/POEC/projetBd/src/mesPreferences.properties");
@@ -862,7 +918,7 @@ public class AccesDB {
 			FileWriter fw = new FileWriter("c:/Temp/Test");
 			mesProperties.store(fw, "ajout clef");
 		} catch (IOException e2) {
-			e2.printStackTrace();
+			AccesDB.LOG.error("Erreur lors de la creation du fichier Test ", e2);
 		}
 		Properties ps = System.getProperties();
 		Iterator<Map.Entry<Object, Object>> iter = ps.entrySet().iterator();
@@ -889,13 +945,10 @@ public class AccesDB {
 			System.out.println("\nRecuperation des infos du compte 12");
 			System.out.println(utilDb.rechercherCompte(12));
 			System.out.println("\nRecuperation des infos des operations du compte 12");
-			System.out.println(utilDb.rechercherOp(12));
+			System.out.println(utilDb.rechercherOp(1, 12));
 			System.out.println("\nFaire un virement de 50 du compte 15 au 12");
-			List<IOperation> lOperation = utilDb.faireVirement(15, 12, 50d);
-			Iterator<IOperation> iterOperation = lOperation.iterator();
-			while (iterCompte.hasNext()) {
-				IOperation operation = iterOperation.next();
-				System.out.println(operation);
+			if (utilDb.faireVirement(15, 12, 50d)) {
+				System.out.println("Virement effectue");
 			}
 			System.out.println("\nTous les noms,prenoms utilisateurs");
 			utilDb.afficherNomPrenomUtilisateur();
@@ -915,17 +968,17 @@ public class AccesDB {
 
 
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			AccesDB.LOG.error("Erreur SQL", e1);
 		} catch (ClientIntrouvableException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur ", e);
 		} catch (ChampsVidesException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur ", e);
 		} catch (CompteIntrouvableException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur ", e);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors du virement ", e);
 		} catch (BanqueException e) {
-			e.printStackTrace();
+			AccesDB.LOG.error("Erreur lors du virement ", e);
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();

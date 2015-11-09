@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration status="error" strict="true" name="XMLConfigTest"
+	packages="org.apache.logging.log4j.test">
+	
+	<Appenders>
+		<Appender type="Console" name="stdout">
+			<PatternLayout pattern="[%d{dd/MM/yyyy HH:mm:ss}] - %5p - %C.%M(...) - %m %n" />
+		</Appender>
+		<!-- C:\Users\...\workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp? -->
+		<RollingRandomAccessFile name="Fichier" fileName="${sys:catalina.base}/logs/appProjetBankWeb.log" filePattern="appProjetBankWeb-%d{MM-dd-yyyy}-%i.log.gz">
+			<PatternLayout pattern="%d %p %c{1.} [%t] %m%n" />
+			<Policies>
+				<!-- Change de fichier si la date ne s'applique plus au nom -->
+				<TimeBasedTriggeringPolicy />
+				<!-- Change de fichier si la taille est supérieure a 50Mg -->
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<!-- Tourne sur 7 fichiers -->
+			<DefaultRolloverStrategy max="7" />
+		</RollingRandomAccessFile>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="fr.banque" level="DEBUG" additivity="false">
+			<AppenderRef ref="stdout" />
+			<AppenderRef ref="Fichier" />
+		</Logger>
+
+		<Root level="WARN">
+			<AppenderRef ref="stdout" />
+		</Root>
+	</Loggers>
+
+</Configuration>
