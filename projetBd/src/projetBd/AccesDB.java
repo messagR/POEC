@@ -3,11 +3,7 @@
  */
 package projetBd;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +13,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +29,7 @@ import fr.banque.entity.ICompteASeuil;
 import fr.banque.entity.ICompteASeuilRemunere;
 import fr.banque.entity.ICompteRemunere;
 import fr.banque.entity.IOperation;
+import fr.banque.entity.IUtilisateur;
 import fr.banque.exception.BanqueException;
 import fr.banque.exception.ChampsVidesException;
 import fr.banque.exception.ClientIntrouvableException;
@@ -43,7 +43,10 @@ import fr.banque.log.CustomMessage;
 public class AccesDB {
 	private final static Logger LOG = LogManager.getLogger();
 
-	private static Connection connexion;
+	DataSource dataSource;
+
+
+	private Connection connexion;
 	// private final static String DRIVER = "com.mysql.jdbc.Driver";
 
 	// AccesDB() {
@@ -55,28 +58,40 @@ public class AccesDB {
 	// }
 	// }
 
-	public AccesDB(String driver) throws SQLException {
-		try {
-			Class.forName(driver);
-		} catch (Throwable cnf) {
-			throw new SQLException("Impossible de charger le driver '" + driver + "' " + cnf);
-		}
+	// public AccesDB(String driver) throws SQLException {
+	// try {
+	// Class.forName(driver);
+	// } catch (Throwable cnf) {
+	// throw new SQLException("Impossible de charger le driver '" + driver + "'
+	// " + cnf);
+	// }
+	// }
+	//
+	// public void seConnecter(String unLogin, String unPassword, String uneUrl)
+	// {
+	// try {
+	// this.connexion = DriverManager.getConnection(uneUrl, unLogin,
+	// unPassword);
+	// } catch (SQLException e) {
+	// AccesDB.LOG.error("Erreur lors de la creation de la connection ", e);
+	// }
+	// }
+
+	public AccesDB(String aJndiName) throws SQLException, NamingException {
+		Context context = new InitialContext();
+		this.dataSource = (DataSource) context.lookup("java:comp/env/" + aJndiName);
 	}
 
-	public void seConnecter(String unLogin, String unPassword, String uneUrl) {
-		try {
-			AccesDB.connexion = DriverManager.getConnection(uneUrl, unLogin, unPassword);
-		} catch (SQLException e) {
-			AccesDB.LOG.error("Erreur lors de la creation de la connection ", e);
-		}
+	public void seConnecter() throws SQLException {
+		this.connexion = this.dataSource.getConnection();
 	}
 
 	public void seDeconnecter() {
-		if (AccesDB.connexion != null) {
+		if (this.connexion != null) {
 			try {
-				AccesDB.connexion.close();
+				this.connexion.close();
 			} catch (SQLException e) {
-				AccesDB.LOG.error("Erreur lors de la connection", e);
+				AccesDB.LOG.error("Erreur lors de la deconnection", e);
 			}
 		}
 	}
@@ -94,7 +109,7 @@ public class AccesDB {
 		try {
 			String requete = "select *,	(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dateDeNaissance)),'%Y')+0) as age "
 					+ "from utilisateur";
-			steClient = AccesDB.connexion.prepareStatement(requete);
+			steClient = this.connexion.prepareStatement(requete);
 			resClient = steClient.executeQuery();
 
 			while (resClient.next()) {
@@ -118,7 +133,7 @@ public class AccesDB {
 
 				requete = "select compte.* from utilisateur "
 						+ "inner join compte on utilisateur.id = compte.utilisateurId " + "where utilisateur.id = ?";
-				steCompte = AccesDB.connexion.prepareStatement(requete);
+				steCompte = this.connexion.prepareStatement(requete);
 				steCompte.setInt(1, client.getNumero());
 				resCompte = steCompte.executeQuery();
 				ICompte compte = null;
@@ -179,7 +194,7 @@ public class AccesDB {
 							+ "inner join compte as cpte on util.id = cpte.utilisateurId "
 							+ "inner join operation as op on cpte.id = op.compteId "
 							+ "where util.id = ? and cpte.id = ?";
-					steOperation = AccesDB.connexion.prepareStatement(requete);
+					steOperation = this.connexion.prepareStatement(requete);
 					steOperation.setInt(1, client.getNumero());
 					steOperation.setInt(2, compte.getNumero());
 					resOperation = steOperation.executeQuery();
@@ -237,7 +252,7 @@ public class AccesDB {
 		ResultSet resClient = null;
 		try {
 			String requete = "select nom, prenom " + "from utilisateur";
-			steClient = AccesDB.connexion.prepareStatement(requete);
+			steClient = this.connexion.prepareStatement(requete);
 			resClient = steClient.executeQuery();
 
 			while (resClient.next()) {
@@ -274,7 +289,7 @@ public class AccesDB {
 		ResultSet res = null;
 		try {
 			String requete = "select * from compte where utilisateurId = ? and id = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setInt(1, userID);
 			ste.setInt(2, compteID);
 			res = ste.executeQuery();
@@ -306,10 +321,10 @@ public class AccesDB {
 		return retour;
 	}
 
-	public IClient authentifier(String login, String password)
+	public IUtilisateur authentifier(String login, String password)
 			throws SQLException,
 			ClientIntrouvableException, ChampsVidesException {
-		IClient client = null;
+		IUtilisateur utilisateur = null;
 
 		if (((login == null) || (login == "")) && ((password == null) || (password == ""))) {
 			throw new ChampsVidesException("Login et mot de passe non renseignes");
@@ -328,7 +343,7 @@ public class AccesDB {
 		try {
 			String requete = "select *,  (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dateDeNaissance)), '%Y')+0) as age "
 					+ "from utilisateur where login = ? and password = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setString(1, login);
 			ste.setString(2, password);
 			resultat = ste.executeQuery();
@@ -336,17 +351,21 @@ public class AccesDB {
 				int idclient = resultat.getInt("id");
 				String nom = resultat.getString("nom");
 				String prenom = resultat.getString("prenom");
-				int age = resultat.getInt("age");
-				String adresse = resultat.getString("adresse");
-				String telephone = resultat.getString("telephone");
-				int codePostal = resultat.getInt("codePostal");
-				int sexe = resultat.getInt("sex");
 				Date derniereConnection = new Date();
 				if (resultat.getTimestamp("derniereConnection") != null) {
 					derniereConnection.setTime(resultat.getTimestamp("derniereConnection").getTime());
 				}
-				client = f.creerClient(idclient, nom, prenom, age, login, password, adresse, telephone, codePostal,
-						sexe, derniereConnection);
+				if (true) {
+					int age = resultat.getInt("age");
+					String adresse = resultat.getString("adresse");
+					String telephone = resultat.getString("telephone");
+					int codePostal = resultat.getInt("codePostal");
+					int sexe = resultat.getInt("sex");
+					utilisateur = f.creerClient(idclient, nom, prenom, age, login, password, adresse, telephone, codePostal,
+							sexe, derniereConnection);
+				} else {
+					utilisateur = f.creerUtilisateur(idclient, nom, prenom, login, password, derniereConnection);
+				}
 			} else {
 				throw new ClientIntrouvableException("Erreur d'authentification");
 			}
@@ -369,7 +388,7 @@ public class AccesDB {
 				}
 			}
 		}
-		return client;
+		return utilisateur;
 	}
 
 	public IClient recupererClient(String unNom, String unPrenom)
@@ -392,7 +411,7 @@ public class AccesDB {
 
 		try {
 			String requete = "select *, (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(dateDeNaissance)), '%Y')+0) as age from utilisateur where nom = ? and prenom = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setString(1, unNom);
 			ste.setString(2, unPrenom);
 			resultat = ste.executeQuery();
@@ -453,7 +472,7 @@ public class AccesDB {
 		try {
 			String requete = "select * "
 					+ "from compte where utilisateurId = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setInt(1, userId);
 			resultat = ste.executeQuery();
 			while (resultat.next()) {
@@ -536,7 +555,7 @@ public class AccesDB {
 
 		try {
 			String requete = "select id " + "from compte where utilisateurId = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setInt(1, userId);
 			resultat = ste.executeQuery();
 			while (resultat.next()) {
@@ -574,7 +593,7 @@ public class AccesDB {
 		Factory f = Factory.getInstance();
 		try {
 			String requete = "select * from compte where id = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setInt(1, id);
 			resultat = ste.executeQuery();
 			if (resultat.next()) {
@@ -706,7 +725,7 @@ public class AccesDB {
 				break;
 			}
 			requete += " order by date DESC";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setInt(1, compte.getNumero());
 			int i = 0;
 			while (i < listeTrous.size()) {
@@ -759,7 +778,7 @@ public class AccesDB {
 				throw new CompteIntrouvableException("Compte introuvable");
 			}
 			String requete = "select * from operation where compteId = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setInt(1, compte.getNumero());
 			resultat = ste.executeQuery();
 			while (resultat.next()) {
@@ -801,13 +820,12 @@ public class AccesDB {
 		}
 
 		PreparedStatement ste = null;
-		Factory f = Factory.getInstance();
 		Date date = new Date();
 		try {
-			AccesDB.connexion.setAutoCommit(false);
+			this.connexion.setAutoCommit(false);
 			String requete = "INSERT INTO operation (libelle, montant, date, compteId) "
 					+ "VALUES(?, ?, ?, ?)";
-			ste = AccesDB.connexion.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+			ste = this.connexion.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			ste.setString(1, "Virement vers compte " + cpDest);
 			ste.setDouble(2, (som * -1));
 			ste.setTimestamp(3, new Timestamp(date.getTime()));
@@ -824,7 +842,7 @@ public class AccesDB {
 			}
 
 			requete = "UPDATE compte SET solde = ? WHERE id = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setDouble(1, compteSrc.getSolde());
 			ste.setInt(2, compteSrc.getNumero());
 			ste.executeUpdate();
@@ -837,7 +855,7 @@ public class AccesDB {
 			}
 
 			requete = "INSERT INTO operation (libelle, montant, date, compteId) " + "VALUES (?, ?, ?, ?)";
-			ste = AccesDB.connexion.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+			ste = this.connexion.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			ste.setString(1, "Virement du compte " + cpSrc);
 			ste.setDouble(2, som);
 			ste.setTimestamp(3, new Timestamp(date.getTime()));
@@ -854,15 +872,15 @@ public class AccesDB {
 			}
 
 			requete = "UPDATE compte SET solde = ? WHERE id = ?";
-			ste = AccesDB.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			ste.setDouble(1, compteDest.getSolde() + som);
 			ste.setInt(2, compteDest.getNumero());
 			ste.executeUpdate();
 
-			AccesDB.connexion.commit();
+			this.connexion.commit();
 		} catch (SQLException e) {
 			try {
-				AccesDB.connexion.rollback();
+				this.connexion.rollback();
 			} catch (SQLException e1) {
 				AccesDB.LOG.error("Erreur lors de l'annulation de la sauvegarde de la base", e1);
 			}
@@ -882,13 +900,15 @@ public class AccesDB {
 
 	public static void main(String[] args) {
 
-		Properties mesProperties = new Properties();
-		// chemin a partir du src
-		try (InputStream is = ClassLoader.getSystemResourceAsStream("mesPreferences.properties")) {
-			mesProperties.load(is);
-		} catch (IOException e) {
-			AccesDB.LOG.error("Erreur lors de la recuperation du fichier mesPreferences.properties ", e);
-		}
+		// Properties mesProperties = new Properties();
+		// // chemin a partir du src
+		// try (InputStream is =
+		// ClassLoader.getSystemResourceAsStream("mesPreferences.properties")) {
+		// mesProperties.load(is);
+		// } catch (IOException e) {
+		// AccesDB.LOG.error("Erreur lors de la recuperation du fichier
+		// mesPreferences.properties ", e);
+		// }
 		// File fichier = new
 		// File("C:/Users/PC/git/POEC/projetBd/src/mesPreferences.properties");
 		// if (fichier.exists() && fichier.canRead()) {
@@ -902,35 +922,40 @@ public class AccesDB {
 		// System.err.println("Fichier '" + fichier + "' pas trouve");
 		// }
 
-		// Nom du driver pour acceder a la base de donnee.
-		// Lire la documentation associee a sa base de donnees pour le connaitre
-		final String utilDbDriver = mesProperties.getProperty("utilDb.driver");
-		// url d'acces a la base de donnees
-		final String utilDbUrl = mesProperties.getProperty("utilDb.url");
-		// login d'acces a la base de donnees
-		final String utilDbLogin = mesProperties.getProperty("utilDb.login");
-		// mot de passe d'acces a la base de donnees
-		final String utilDbPassword = mesProperties.getProperty("utilDb.password");
+		// // Nom du driver pour acceder a la base de donnee.
+		// // Lire la documentation associee a sa base de donnees pour le
+		// connaitre
+		// final String utilDbDriver =
+		// mesProperties.getProperty("utilDb.driver");
+		// // url d'acces a la base de donnees
+		// final String utilDbUrl = mesProperties.getProperty("utilDb.url");
+		// // login d'acces a la base de donnees
+		// final String utilDbLogin = mesProperties.getProperty("utilDb.login");
+		// // mot de passe d'acces a la base de donnees
+		// final String utilDbPassword =
+		// mesProperties.getProperty("utilDb.password");
 
-		mesProperties.setProperty("une.nouvelle.clef", "bonjour");
+		// mesProperties.setProperty("une.nouvelle.clef", "bonjour");
 		// pour sauvegarder
-		try {
-			FileWriter fw = new FileWriter("c:/Temp/Test");
-			mesProperties.store(fw, "ajout clef");
-		} catch (IOException e2) {
-			AccesDB.LOG.error("Erreur lors de la creation du fichier Test ", e2);
-		}
-		Properties ps = System.getProperties();
-		Iterator<Map.Entry<Object, Object>> iter = ps.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry<Object, Object> entry = iter.next();
-			System.out.println(entry.getKey() + "=" + entry.getValue());
-		}
+		// try {
+		// FileWriter fw = new FileWriter("c:/Temp/Test");
+		// mesProperties.store(fw, "ajout clef");
+		// } catch (IOException e2) {
+		// AccesDB.LOG.error("Erreur lors de la creation du fichier Test ", e2);
+		// }
+		// Properties ps = System.getProperties();
+		// Iterator<Map.Entry<Object, Object>> iter = ps.entrySet().iterator();
+		// while (iter.hasNext()) {
+		// Map.Entry<Object, Object> entry = iter.next();
+		// System.out.println(entry.getKey() + "=" + entry.getValue());
+		// }
 
 		AccesDB utilDb = null;
 		try {
-			utilDb = new AccesDB(utilDbDriver);
-			utilDb.seConnecter(utilDbLogin, utilDbPassword, utilDbUrl);
+			// utilDb = new AccesDB(utilDbDriver);
+			// utilDb.seConnecter(utilDbLogin, utilDbPassword, utilDbUrl);
+			utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			utilDb.seConnecter();
 			System.out.println("Authentification client");
 			utilDb.authentifier("df", "df");
 			System.out.println("\nRecuperation des infos de Fargis Denis");
@@ -979,6 +1004,8 @@ public class AccesDB {
 			AccesDB.LOG.error("Erreur lors du virement ", e);
 		} catch (BanqueException e) {
 			AccesDB.LOG.error("Erreur lors du virement ", e);
+		} catch (NamingException e) {
+			AccesDB.LOG.error("Erreur ", e);
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();

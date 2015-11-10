@@ -6,7 +6,7 @@ import fr.banque.exception.BanqueException;
 
 public final class Factory {
 
-	private int dernierNumeroClient;
+	private int dernierNumeroUtilisateur;
 	private int dernierNumeroCompte;
 	private int dernierNumeroOperation;
 
@@ -15,7 +15,7 @@ public final class Factory {
 
 	private Factory() {
 		super();
-		this.setDernierNumeroClient(1);
+		this.setDernierNumeroUtilisateur(1);
 		this.setDernierNumeroCompte(100000);
 		this.setDernierNumeroOperation(1);
 	}
@@ -49,12 +49,12 @@ public final class Factory {
 		this.dernierNumeroOperation = dernierNumeroOperation;
 	}
 
-	public int getDernierNumeroClient() {
-		return this.dernierNumeroClient;
+	public int getDernierNumeroUtilisateur() {
+		return this.dernierNumeroUtilisateur;
 	}
 
-	private void setDernierNumeroClient(int dernierNumClient) {
-		this.dernierNumeroClient = dernierNumClient;
+	private void setDernierNumeroUtilisateur(int dernierNumUtilisateur) {
+		this.dernierNumeroUtilisateur = dernierNumUtilisateur;
 	}
 
 	public void affecteNumeroCompte(ICompte compte) {
@@ -174,6 +174,20 @@ public final class Factory {
 		return compte;
 	}
 
+	public IUtilisateur creerUtilisateur() {
+		return this.creerUtilisateur(0, "", "", "", "", new Date());
+	}
+
+	public IUtilisateur creerUtilisateur(int id, String nom, String prenom, String login, String password,
+			Date derniereConnection) {
+		IUtilisateur utilisateur = new Utilisateur(id, nom, prenom, login, password, derniereConnection);
+
+		// utilisateur.setNumero(this.getDernierNumeroUtilisateur());
+		// this.dernierNumeroUtilisateur++;
+
+		return utilisateur;
+	}
+
 	public IClient creerClient() {
 		return this.creerClient(0, "", "", 0, "", "", "", "", 0, 0, new Date());
 	}
@@ -183,8 +197,8 @@ public final class Factory {
 		IClient client = new Client(id, nom, prenom, age, login, password, adresse, telephone, codePostal, sexe,
 				derniereConnection);
 
-		// client.setNumero(this.getDernierNumeroClient());
-		// this.dernierNumeroClient++;
+		// client.setNumero(this.getDernierNumeroUtilisateur());
+		// this.dernierNumeroUtilisateur++;
 
 		return client;
 	}

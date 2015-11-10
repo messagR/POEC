@@ -49,7 +49,10 @@ table thead tr{
 	color:#FFD8A8;
 }
 
-form{margin:0px;}
+form{
+	margin:0px;
+	 display:inline;
+}
 
 select{
 	height:30px;

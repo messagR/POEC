@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -72,13 +73,16 @@ public class ServletListeCompte extends HttpServlet {
 			return;
 		}
 
-		FichierProp properties = new FichierProp();
-
-		AccesDB utilDb = null;
 		List<BeanCompte> listCompte = new ArrayList<BeanCompte>();
+		// FichierProp properties = new FichierProp();
+		AccesDB utilDb = null;
 		try {
-			utilDb = new AccesDB(properties.getUtilDbDriver());
-			utilDb.seConnecter(properties.getUtilDbLogin(), properties.getUtilDbPassword(), properties.getUtilDbUrl());
+			// utilDb = new AccesDB(properties.getUtilDbDriver());
+			// utilDb.seConnecter(properties.getUtilDbLogin(),
+			// properties.getUtilDbPassword(),
+			// properties.getUtilDbUrl());
+			utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			utilDb.seConnecter();
 			ServletListeCompte.LOG.info("----->Recherche les comptes du client n°{}", idClient);
 			List<ICompte> listICompte = utilDb.listeCompte(idClient);
 			if (!listICompte.isEmpty()) {
@@ -107,6 +111,9 @@ public class ServletListeCompte extends HttpServlet {
 			dispatcher = request.getRequestDispatcher("/ServletDeconnexion");
 			dispatcher.forward(request, response);
 			return;
+		} catch (NamingException e) {
+			request.setAttribute("erreur", e.getMessage());
+			ServletListeCompte.LOG.error("Erreur : " + e.getMessage());
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  * @author PC
  *
  */
-public class FichierProp {
+public class FichierPropSupprime {
 	private final static Logger LOG = LogManager.getLogger();
 
 	// Nom du driver pour acceder a la base de donnee.
@@ -27,12 +27,12 @@ public class FichierProp {
 	// mot de passe d'acces a la base de donnees
 	String utilDbPassword;
 
-	public FichierProp() {
+	public FichierPropSupprime() {
 		Properties mesProperties = new Properties();
 		try (InputStream is = ServletLogin.class.getClassLoader().getResourceAsStream("mesPreferences.properties")) {
 			mesProperties.load(is);
 		} catch (IOException e) {
-			FichierProp.LOG.error("Recuperation du fichier mesPreferences.properties impossible");
+			FichierPropSupprime.LOG.error("Recuperation du fichier mesPreferences.properties impossible");
 		}
 
 		this.setUtilDbDriver(mesProperties.getProperty("utilDb.driver"));

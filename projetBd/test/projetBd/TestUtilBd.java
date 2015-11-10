@@ -6,6 +6,8 @@ package projetBd;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,9 +30,12 @@ public class TestUtilBd
 	@Before
 	public void beforeClass() {
 		try {
-			this.db = new AccesDB("com.mysql.jdbc.Driver");
-			this.db.seConnecter("root", "root", "jdbc:mysql://localhost:3306/banque");
-		} catch (SQLException e) {
+			// this.db = new AccesDB("com.mysql.jdbc.Driver");
+			// this.db.seConnecter("root", "root",
+			// "jdbc:mysql://localhost:3306/banque");
+			this.db = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			this.db.seConnecter();
+		} catch (SQLException | NamingException e) {
 			e.printStackTrace();
 		}
 	}

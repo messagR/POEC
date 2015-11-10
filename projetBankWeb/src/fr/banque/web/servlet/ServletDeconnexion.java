@@ -54,8 +54,9 @@ public class ServletDeconnexion extends HttpServlet {
 		ServletDeconnexion.LOG.info("----->Deconnexion du client n°{}",
 				request.getSession(true).getAttribute("idClient"));
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
-		request.getSession(true).setAttribute("idClient", null);
-		request.getSession(true).setAttribute("banquier", false);
+		request.getSession().invalidate();
+		// request.getSession().setAttribute("idClient", null);
+		// request.getSession().setAttribute("banquier", false);
 		request.setAttribute("succes", "Vous avez bien ete deconnecte");
 		dispatcher.forward(request, response);
 		return;

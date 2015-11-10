@@ -19,14 +19,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet Filter implementation class Authentification
  */
-@WebFilter("/BanquierRecupere")
-public class BanquierRecupere implements Filter {
+@WebFilter("/FilterListeComptes")
+public class FilterListeOperations implements Filter {
 	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * Default constructor.
 	 */
-	public BanquierRecupere() {
+	public FilterListeOperations() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -52,11 +52,8 @@ public class BanquierRecupere implements Filter {
 		if (request instanceof HttpServletRequest) {
 			hResponse = (HttpServletResponse) response;
 		}
-		Boolean banquier = (Boolean) hRequest.getSession(true).getAttribute("banquier");
-		if ((banquier == null) || !banquier) {
-			request.setAttribute("erreur", "Vous n'etes pas connecte");
-			BanquierRecupere.LOG.error("Utilisateur deconnecte");
-			RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/login.jsp");
+		if (hRequest.getParameter("listOperation") == null) {
+			RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/ServletListeOperation");
 			dispatcher.forward(hRequest, hResponse);
 			return;
 		}

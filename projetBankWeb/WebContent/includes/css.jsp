@@ -1,3 +1,4 @@
+<%@ page session="false" %>
 <%@ include file="/includes/TagLibs.jsp" %>
 		<!-- feuilles de styles -->
 		<link rel="stylesheet" href="<c:url value="/css/normalize.css"/>" >

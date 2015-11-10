@@ -19,14 +19,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet Filter implementation class Authentification
  */
-@WebFilter("/ListeClients")
-public class ListeClients implements Filter {
+@WebFilter("/FilterClientRecupere")
+public class FilterClientRecupere implements Filter {
 	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * Default constructor.
 	 */
-	public ListeClients() {
+	public FilterClientRecupere() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -52,10 +52,22 @@ public class ListeClients implements Filter {
 		if (request instanceof HttpServletRequest) {
 			hResponse = (HttpServletResponse) response;
 		}
-		if (hRequest.getParameter("listClient") == null) {
-			RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/ServletChoixClient");
-			dispatcher.forward(hRequest, hResponse);
-			return;
+		Integer idClient = (Integer) hRequest.getSession(false).getAttribute("idClient");
+		if (idClient == null) {
+			Boolean banquier = (Boolean) hRequest.getSession(false).getAttribute("banquier");
+			if ((banquier == null) || !banquier) {
+				request.setAttribute("erreur", "Vous n'etes pas connecte");
+				FilterClientRecupere.LOG.error("Utilisateur deconnecte");
+				RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/login.jsp");
+				dispatcher.forward(hRequest, hResponse);
+				return;
+			} else {
+				request.setAttribute("erreur", "Veuillez choisir un client");
+				FilterClientRecupere.LOG.error("Utilisateur deconnecte");
+				RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/ServletChoixClient");
+				dispatcher.forward(hRequest, hResponse);
+				return;
+			}
 		}
 		chain.doFilter(request, response);
 	}

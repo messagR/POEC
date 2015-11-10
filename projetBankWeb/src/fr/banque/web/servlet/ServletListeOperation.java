@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -88,13 +89,16 @@ public class ServletListeOperation extends HttpServlet {
 
 		}
 
-		FichierProp properties = new FichierProp();
-
-		AccesDB utilDb = null;
 		List<IOperation> listOperation = null;
+		// FichierProp properties = new FichierProp();
+		AccesDB utilDb = null;
 		try {
-			utilDb = new AccesDB(properties.getUtilDbDriver());
-			utilDb.seConnecter(properties.getUtilDbLogin(), properties.getUtilDbPassword(), properties.getUtilDbUrl());
+			// utilDb = new AccesDB(properties.getUtilDbDriver());
+			// utilDb.seConnecter(properties.getUtilDbLogin(),
+			// properties.getUtilDbPassword(),
+			// properties.getUtilDbUrl());
+			utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			utilDb.seConnecter();
 			ServletListeOperation.LOG.debug("Verifie que le compte n°{} appartient bien au client n°{}", idCompte,
 					idClient);
 			if (utilDb.verifieCompteUtilisateur(idClient, idCompte)) {
@@ -120,6 +124,9 @@ public class ServletListeOperation extends HttpServlet {
 			dispatcher = request.getRequestDispatcher("ServletDeconnexion");
 			dispatcher.forward(request, response);
 			return;
+		} catch (NamingException e) {
+			request.setAttribute("erreur", e.getMessage());
+			ServletListeOperation.LOG.error("Erreur : " + e.getMessage());
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();

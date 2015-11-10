@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -67,18 +68,20 @@ public class ServletChoixClient extends HttpServlet {
 			return;
 		}
 
-		FichierProp properties = new FichierProp();
-
+		// FichierProp properties = new FichierProp();
 		AccesDB utilDb = null;
 		try {
-			utilDb = new AccesDB(properties.getUtilDbDriver());
-			utilDb.seConnecter(properties.getUtilDbLogin(), properties.getUtilDbPassword(),
-					properties.getUtilDbUrl());
+			// utilDb = new AccesDB(properties.getUtilDbDriver());
+			// utilDb.seConnecter(properties.getUtilDbLogin(),
+			// properties.getUtilDbPassword(),
+			// properties.getUtilDbUrl());
+			utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			utilDb.seConnecter();
 			List<IClient> listClient = utilDb.listeClient();
 			ServletChoixClient.LOG.info("----->Liste client recupere : {}", listClient);
 			request.setAttribute("listClient", listClient);
 			request.getSession(true).setAttribute("banquier", true);
-		} catch (SQLException e) {
+		} catch (SQLException | NamingException e) {
 			request.setAttribute("erreur", "Erreur SQL : " + e.getMessage());
 			ServletChoixClient.LOG.error("Erreur SQL : " + e.getMessage());
 		} finally {

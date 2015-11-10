@@ -1,3 +1,4 @@
+<%@ page session="false" %>
 <%@ include file="/includes/TagLibs.jsp" %>
 		<!-- Scripts -->
 		<script type="text/javascript" src="<c:url value="/JS/jquery.min.js"/>"></script>

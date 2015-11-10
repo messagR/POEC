@@ -10,55 +10,29 @@ import org.apache.logging.log4j.Logger;
 
 import fr.banque.exception.BanqueException;
 
-class Client extends Entite implements IClient {
+class Client extends Utilisateur implements IClient {
 	private static final long serialVersionUID = 1L;
 	private final static Logger LOG = LogManager.getLogger();
 
-	private String nom, prenom, login, password, adresse, telephone;
+	private String adresse, telephone;
 	private int age, codePostal, sexe;
-	private Date derniereConnection;
 	// private List<ICompte> comptes;
 	private Map<Integer, ICompte> comptes;
 
 	public final static int NB_COMPTE_MAX = 5;
 
 	Client() {
-		this(0, "", "", 0, "", "", "", "", 0, 0, new Date());
+		super();
 	}
 
 	Client(int id, String nom, String prenom, int age, String login, String password, String adresse, String telephone,
 			int codePostal, int sexe, Date derniereConnection) {
-		this.setNumero(id);
-		this.setNom(nom);
-		this.setPrenom(prenom);
+		super(id, nom, prenom, login, password, derniereConnection);
 		this.setAge(age);
-		this.setLogin(login);
-		this.setPassword(password);
 		this.setAdresse(adresse);
 		this.setTelephone(telephone);
 		this.setCodePostal(codePostal);
 		this.setSexe(sexe);
-		this.setDerniereConnection(derniereConnection);
-	}
-
-	@Override
-	public String getNom() {
-		return this.nom;
-	}
-
-	@Override
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	@Override
-	public String getPrenom() {
-		return this.prenom;
-	}
-
-	@Override
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
 	}
 
 	@Override
@@ -96,26 +70,6 @@ class Client extends Entite implements IClient {
 	}
 
 	@Override
-	public String getLogin() {
-		return this.login;
-	}
-
-	@Override
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	@Override
-	public String getPassword() {
-		return this.password;
-	}
-
-	@Override
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	@Override
 	public String getAdresse() {
 		return this.adresse;
 	}
@@ -143,16 +97,6 @@ class Client extends Entite implements IClient {
 	@Override
 	public void setCodePostal(int codePostal) {
 		this.codePostal = codePostal;
-	}
-
-	@Override
-	public Date getDerniereConnection() {
-		return this.derniereConnection;
-	}
-
-	@Override
-	public void setDerniereConnection(Date derniereConnection) {
-		this.derniereConnection = derniereConnection;
 	}
 
 	@Override
@@ -209,18 +153,6 @@ class Client extends Entite implements IClient {
 		StringBuilder builder = new StringBuilder();
 		builder.append(super.toString());
 		builder.delete(builder.length() - 1, builder.length());
-		if (this.getNom() != null) {
-			builder.append(", nom = ").append(this.getNom()).append(", ");
-		}
-		if (this.getPrenom() != null) {
-			builder.append("prenom = ").append(this.getPrenom()).append(", ");
-		}
-		if (this.getLogin() != null) {
-			builder.append("login = ").append(this.getLogin()).append(", ");
-		}
-		if (this.getPassword() != null) {
-			builder.append("mot de passe = ").append(this.getPassword()).append(", ");
-		}
 		builder.append("cp = ").append(this.getCodePostal()).append(", ");
 		if (this.getAdresse() != null) {
 			builder.append("adresse = ").append(this.getAdresse()).append(", ");
@@ -239,7 +171,6 @@ class Client extends Entite implements IClient {
 			break;
 		}
 		builder.append(", ");
-		builder.append("derniere connexion = ").append(this.getDerniereConnection()).append(", ");
 		builder.append("age = ").append(this.getAge());
 		if (this.getComptes() != null) {
 			builder.append("\n         | ").append("comptes = ");

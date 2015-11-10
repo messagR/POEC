@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -85,13 +86,16 @@ public class ServletEffectuerVirement extends HttpServlet {
 				idClient, cptEmetteur,
 				cptDestinataire, montant);
 
-		FichierProp properties = new FichierProp();
-
-		AccesDB utilDb = null;
 		List<ICompte> listCompte = null;
+		// FichierProp properties = new FichierProp();
+		AccesDB utilDb = null;
 		try {
-			utilDb = new AccesDB(properties.getUtilDbDriver());
-			utilDb.seConnecter(properties.getUtilDbLogin(), properties.getUtilDbPassword(), properties.getUtilDbUrl());
+			// utilDb = new AccesDB(properties.getUtilDbDriver());
+			// utilDb.seConnecter(properties.getUtilDbLogin(),
+			// properties.getUtilDbPassword(),
+			// properties.getUtilDbUrl());
+			utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			utilDb.seConnecter();
 			if ((cptEmetteur != null) && (cptDestinataire != null)) {
 				if (!cptEmetteur.equals(cptDestinataire)) {
 					ServletEffectuerVirement.LOG.info(
@@ -158,6 +162,9 @@ public class ServletEffectuerVirement extends HttpServlet {
 			dispatcher = request.getRequestDispatcher("/ServletDeconnexion");
 			dispatcher.forward(request, response);
 			return;
+		} catch (NamingException e) {
+			request.setAttribute("erreur", e.getMessage());
+			ServletEffectuerVirement.LOG.error("Erreur : " + e.getMessage());
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();

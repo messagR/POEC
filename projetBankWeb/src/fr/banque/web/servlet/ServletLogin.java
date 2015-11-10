@@ -3,8 +3,12 @@ package fr.banque.web.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -17,7 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import fr.banque.entity.Factory;
 import fr.banque.entity.IClient;
+import fr.banque.entity.IUtilisateur;
 import fr.banque.exception.ChampsVidesException;
 import fr.banque.exception.ClientIntrouvableException;
 import projetBd.AccesDB;
@@ -71,20 +77,29 @@ public class ServletLogin extends HttpServlet {
 				ServletLogin.LOG.info("----->Banquier connecte");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/clients/liste.jsp");
 
-				FichierProp properties = new FichierProp();
-
+				// FichierProp properties = new FichierProp();
 				AccesDB utilDb = null;
 				try {
-					utilDb = new AccesDB(properties.getUtilDbDriver());
-					utilDb.seConnecter(properties.getUtilDbLogin(), properties.getUtilDbPassword(),
-							properties.getUtilDbUrl());
+					// utilDb = new AccesDB(properties.getUtilDbDriver());
+					// utilDb.seConnecter(properties.getUtilDbLogin(),
+					// properties.getUtilDbPassword(),
+					// properties.getUtilDbUrl());
+					utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+					utilDb.seConnecter();
 					List<IClient> listClient = utilDb.listeClient();
 					ServletLogin.LOG.info("----->Liste client recupere : {}", listClient);
 					request.setAttribute("listClient", listClient);
 					request.getSession(true).setAttribute("banquier", true);
+					Factory f = Factory.getInstance();
+					IUtilisateur util = f.creerUtilisateur(-1, "ZUNINO", "Angelique", login, password, new Date());
 				} catch (SQLException e) {
 					request.setAttribute("erreur", "Erreur SQL : " + e.getMessage());
 					ServletLogin.LOG.error("Erreur SQL : " + e.getMessage());
+					dispatcher = request.getRequestDispatcher("/login.jsp");
+				} catch (NamingException e) {
+					request.setAttribute("erreur", e.getMessage());
+					ServletLogin.LOG.error("Erreur : " + e.getMessage());
+					dispatcher = request.getRequestDispatcher("/login.jsp");
 				} finally {
 					if (utilDb != null) {
 						utilDb.seDeconnecter();
@@ -95,17 +110,27 @@ public class ServletLogin extends HttpServlet {
 			}else{
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/menu.jsp");
 
-				FichierProp properties = new FichierProp();
-
+				// FichierProp properties = new FichierProp();
 				AccesDB utilDb = null;
 				try {
-					utilDb = new AccesDB(properties.getUtilDbDriver());
-					utilDb.seConnecter(properties.getUtilDbLogin(), properties.getUtilDbPassword(), properties.getUtilDbUrl());
-					IClient client = utilDb.authentifier(login, password);
-					ServletLogin.LOG.info("----->Utilisateur n°{} - {} {} connecte", client.getNumero(), client.getPrenom(),
-							client.getNom());
-					request.getSession(true).setAttribute("idClient", client.getNumero());
+					// utilDb = new AccesDB(properties.getUtilDbDriver());
+					// utilDb.seConnecter(properties.getUtilDbLogin(),
+					// properties.getUtilDbPassword(),
+					// properties.getUtilDbUrl());
+					utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+					utilDb.seConnecter();
+					IUtilisateur util = utilDb.authentifier(login, password);
+					ServletLogin.LOG.info("----->Utilisateur n°{} - {} {} connecte", util.getNumero(), util.getPrenom(),
+							util.getNom());
+					request.getSession(true).setAttribute("idClient", util.getNumero());
 					request.getSession(true).setAttribute("banquier", false);
+					Map<String, IUtilisateur> listeConnectes = (Map<String, IUtilisateur>) request.getServletContext()
+							.getAttribute("listeConnectes");
+					if (listeConnectes == null) {
+						listeConnectes = new Hashtable<String, IUtilisateur>();
+					}
+					listeConnectes.put(request.getSession(true).getId(), util);
+					request.getServletContext().setAttribute("listeConnectes", listeConnectes);
 				} catch (SQLException e) {
 					request.setAttribute("erreur", "Erreur SQL : " + e.getMessage());
 					ServletLogin.LOG.error("Erreur SQL : " + e.getMessage());
@@ -113,6 +138,10 @@ public class ServletLogin extends HttpServlet {
 				} catch (ClientIntrouvableException | ChampsVidesException e) {
 					request.setAttribute("erreur", e.getMessage());
 					ServletLogin.LOG.error(e.getMessage());
+					dispatcher = request.getRequestDispatcher("/login.jsp");
+				} catch (NamingException e) {
+					request.setAttribute("erreur", e.getMessage());
+					ServletLogin.LOG.error("Erreur : " + e.getMessage());
 					dispatcher = request.getRequestDispatcher("/login.jsp");
 				} finally {
 					if (utilDb != null) {

@@ -1,3 +1,4 @@
+<%@ page session="false" %>
 <%@ include file="/includes/TagLibs.jsp" %>
 							<c:if test="${erreur != null}">
 					    		<script>

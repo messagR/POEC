@@ -19,14 +19,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet Filter implementation class Authentification
  */
-@WebFilter("/Virement")
-public class Virement implements Filter {
+@WebFilter("/FilterVirement")
+public class FilterVirement implements Filter {
 	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * Default constructor.
 	 */
-	public Virement() {
+	public FilterVirement() {
 		// TODO Auto-generated constructor stub
 	}
 

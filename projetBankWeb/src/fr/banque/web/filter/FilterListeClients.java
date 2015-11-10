@@ -19,14 +19,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet Filter implementation class Authentification
  */
-@WebFilter("/ListeComptes")
-public class ListeComptes implements Filter {
+@WebFilter("/FilterListeClients")
+public class FilterListeClients implements Filter {
 	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * Default constructor.
 	 */
-	public ListeComptes() {
+	public FilterListeClients() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -52,8 +52,8 @@ public class ListeComptes implements Filter {
 		if (request instanceof HttpServletRequest) {
 			hResponse = (HttpServletResponse) response;
 		}
-		if (hRequest.getParameter("listCompte") == null) {
-			RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/ServletListeCompte");
+		if (hRequest.getParameter("listClient") == null) {
+			RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/ServletChoixClient");
 			dispatcher.forward(hRequest, hResponse);
 			return;
 		}

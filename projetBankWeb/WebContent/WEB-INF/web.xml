@@ -1,86 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-	<display-name>projetBankWeb</display-name>
-
-	<filter>
-		<filter-name>BanquierRecupere</filter-name>
-		<filter-class>fr.banque.web.filter.BanquierRecupere</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>BanquierRecupere</filter-name>
-		<url-pattern>/clients/*</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>ClientRecupere</filter-name>
-		<filter-class>fr.banque.web.filter.ClientRecupere</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>ClientRecupere</filter-name>
-		<url-pattern>/comptes/*</url-pattern>
-		<url-pattern>/menu.jsp</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>ListeComptes</filter-name>
-		<filter-class>fr.banque.web.filter.ListeComptes</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>ListeComptes</filter-name>
-		<url-pattern>/comptes/liste.jsp</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>CompteRecupere</filter-name>
-		<filter-class>fr.banque.web.filter.CompteRecupere</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>CompteRecupere</filter-name>
-		<url-pattern>/comptes/historique.jsp</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>ListeOperations</filter-name>
-		<filter-class>fr.banque.web.filter.ListeOperations</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>ListeOperations</filter-name>
-		<url-pattern>/comptes/historique.jsp</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>Virement</filter-name>
-		<filter-class>fr.banque.web.filter.Virement</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>Virement</filter-name>
-		<url-pattern>/comptes/virement.jsp</url-pattern>
-	</filter-mapping>
-
-	<filter>
-		<filter-name>ListeClients</filter-name>
-		<filter-class>fr.banque.web.filter.ListeClients</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>ListeClients</filter-name>
-		<url-pattern>/clients/liste.jsp</url-pattern>
-	</filter-mapping>
-	
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
+  <display-name>projetBankWeb</display-name>
+  <description>Mon projet banque web</description>
   
-	<error-page>
-		<error-code>404</error-code>
-		<location>/404.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/500.jsp</location>
-	</error-page>
+  <filter>
+    <filter-name>FilterConnexion</filter-name>
+    <filter-class>fr.banque.web.filter.FilterConnexion</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterConnexion</filter-name>
+    <url-pattern>/login.jsp</url-pattern>
+    <url-pattern>/ServletLogin</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>FilterBanquierRecupere</filter-name>
+    <filter-class>fr.banque.web.filter.FilterBanquierRecupere</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterBanquierRecupere</filter-name>
+    <url-pattern>/clients/*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>FilterClientRecupere</filter-name>
+    <filter-class>fr.banque.web.filter.FilterClientRecupere</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterClientRecupere</filter-name>
+    <url-pattern>/comptes/*</url-pattern>
+    <url-pattern>/menu.jsp</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>FilterListeComptes</filter-name>
+    <filter-class>fr.banque.web.filter.FilterListeComptes</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterListeComptes</filter-name>
+    <url-pattern>/comptes/liste.jsp</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>FilterCompteRecupere</filter-name>
+    <filter-class>fr.banque.web.filter.FilterCompteRecupere</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterCompteRecupere</filter-name>
+    <url-pattern>/comptes/historique.jsp</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>FilterListeOperations</filter-name>
+    <filter-class>fr.banque.web.filter.FilterListeOperations</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterListeOperations</filter-name>
+    <url-pattern>/comptes/historique.jsp</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>FilterVirement</filter-name>
+    <filter-class>fr.banque.web.filter.FilterVirement</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterVirement</filter-name>
+    <url-pattern>/comptes/virement.jsp</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>FilterListeClients</filter-name>
+    <filter-class>fr.banque.web.filter.FilterListeClients</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>FilterListeClients</filter-name>
+    <url-pattern>/clients/liste.jsp</url-pattern>
+  </filter-mapping>
+  
+  <listener>
+    <listener-class>fr.banque.web.listener.ListenerUtilisateurs</listener-class>
+  </listener>
+  
+  <session-config>
+  	<session-timeout>90</session-timeout>
+  </session-config>
+  
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <error-page>
+    <error-code>404</error-code>
+    <location>/404.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/500.jsp</location>
+  </error-page>
+  
+  
+	<!-- lien entre la data source et le pool de connexions -->
+	<resource-ref>
+		<description>DB Connection</description>
+		<res-ref-name>jdbc/dataSourceProjetBankWeb</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
 </web-app>

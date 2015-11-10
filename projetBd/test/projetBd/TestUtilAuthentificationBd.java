@@ -5,12 +5,14 @@ package projetBd;
 
 import java.sql.SQLException;
 
+import javax.naming.NamingException;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.banque.entity.IClient;
+import fr.banque.entity.IUtilisateur;
 import fr.banque.exception.ChampsVidesException;
 import fr.banque.exception.ClientIntrouvableException;
 
@@ -25,9 +27,12 @@ public class TestUtilAuthentificationBd
 	@Before
 	public void beforeClass() {
 		try {
-			this.db = new AccesDB("com.mysql.jdbc.Driver");
-			this.db.seConnecter("root", "root", "jdbc:mysql://localhost:3306/banque");
-		} catch (SQLException e) {
+			// this.db = new AccesDB("com.mysql.jdbc.Driver");
+			// this.db.seConnecter("root", "root",
+			// "jdbc:mysql://localhost:3306/banque");
+			this.db = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			this.db.seConnecter();
+		} catch (SQLException | NamingException e) {
 			e.printStackTrace();
 		}
 	}
@@ -41,7 +46,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationReussie() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier("df", "df");
 		} catch (Exception e) {
@@ -52,7 +57,7 @@ public class TestUtilAuthentificationBd
 
 	@Test(expected = ClientIntrouvableException.class)
 	public void testerAuthentificationRatee() throws ClientIntrouvableException {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier("toto", "tata");
 		} catch (SQLException e) {
@@ -65,7 +70,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationLoginVide() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier("", "df");
 		} catch (SQLException e) {
@@ -80,7 +85,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationImpossibleLoginNull() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier(null, "df");
 		} catch (SQLException e) {
@@ -95,7 +100,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationMDPVide() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier("df", "");
 		} catch (SQLException e) {
@@ -111,7 +116,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationMDPNull() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier("df", null);
 		} catch (SQLException e) {
@@ -127,7 +132,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationLoginVideMDPVide() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier("", "");
 		} catch (SQLException e) {
@@ -143,7 +148,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationLoginVideMDPNull() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier("", null);
 		} catch (SQLException e) {
@@ -159,7 +164,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationLoginNullMDPVide() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier(null, "");
 		} catch (SQLException e) {
@@ -175,7 +180,7 @@ public class TestUtilAuthentificationBd
 
 	@Test
 	public void testerAuthentificationLoginNullMDPNull() {
-		IClient client = null;
+		IUtilisateur client = null;
 		try {
 			client = this.db.authentifier(null, null);
 		} catch (SQLException e) {

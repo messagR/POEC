@@ -19,14 +19,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet Filter implementation class Authentification
  */
-@WebFilter("/ClientRecupere")
-public class ClientRecupere implements Filter {
+@WebFilter("/FilterCompteRecupere")
+public class FilterCompteRecupere implements Filter {
 	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * Default constructor.
 	 */
-	public ClientRecupere() {
+	public FilterCompteRecupere() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -52,22 +52,13 @@ public class ClientRecupere implements Filter {
 		if (request instanceof HttpServletRequest) {
 			hResponse = (HttpServletResponse) response;
 		}
-		Integer idClient = (Integer) hRequest.getSession(true).getAttribute("idClient");
-		if (idClient == null) {
-			Boolean banquier = (Boolean) hRequest.getSession(true).getAttribute("banquier");
-			if ((banquier == null) || !banquier) {
-				request.setAttribute("erreur", "Vous n'etes pas connecte");
-				ClientRecupere.LOG.error("Utilisateur deconnecte");
-				RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/login.jsp");
-				dispatcher.forward(hRequest, hResponse);
-				return;
-			} else {
-				request.setAttribute("erreur", "Veuillez choisir un client");
-				ClientRecupere.LOG.error("Utilisateur deconnecte");
-				RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/ServletChoixClient");
-				dispatcher.forward(hRequest, hResponse);
-				return;
-			}
+		Integer idCompte = (Integer) hRequest.getSession(false).getAttribute("idCompte");
+		if (idCompte == null) {
+			request.setAttribute("erreur", "Veuillez choisir un compte");
+			FilterCompteRecupere.LOG.error("Compte inconnu");
+			RequestDispatcher dispatcher = hRequest.getRequestDispatcher("/ServletListeCompte");
+			dispatcher.forward(hRequest, hResponse);
+			return;
 		}
 		chain.doFilter(request, response);
 	}

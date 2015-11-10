@@ -1,3 +1,4 @@
+<%@ page session="false" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/includes/TagLibs.jsp" %>
@@ -25,6 +26,9 @@
   						<form id="frmAuthentification" name="frmAuthentification" action="<c:url value="/login.jsp"/>" method="post">
   							<a href="javascript:frmAuthentification.submit()">S'authentifier</a>
 			          	</form>
+                   		 Nombre de client connecte : 
+                   		 <c:if test="${empty listeConnectes}">0</c:if>
+                   		 <c:if test="${!empty listeConnectes}"><c:out value="${listeConnectes.size()}" /></c:if>
 			        </div>
 				</div>
 			</div><!-- fin du container -->

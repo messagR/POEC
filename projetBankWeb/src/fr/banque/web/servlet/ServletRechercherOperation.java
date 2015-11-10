@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -111,13 +112,16 @@ public class ServletRechercherOperation extends HttpServlet {
 				"----->Recherche d'operations pour le compte n°{} du client n°{} du {} au {} {}", idCompte, idClient,
 				sdf.format(dateDebut), sdf.format(dateFin), debitCredit);
 
-		FichierProp properties = new FichierProp();
-
-		AccesDB utilDb = null;
 		List<IOperation> listOperation = null;
+		// FichierProp properties = new FichierProp();
+		AccesDB utilDb = null;
 		try {
-			utilDb = new AccesDB(properties.getUtilDbDriver());
-			utilDb.seConnecter(properties.getUtilDbLogin(), properties.getUtilDbPassword(), properties.getUtilDbUrl());
+			// utilDb = new AccesDB(properties.getUtilDbDriver());
+			// utilDb.seConnecter(properties.getUtilDbLogin(),
+			// properties.getUtilDbPassword(),
+			// properties.getUtilDbUrl());
+			utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
+			utilDb.seConnecter();
 			if (dateDebut.after(dateFin)) {
 				request.setAttribute("erreur", "La date de debut ne doit pas etre superieure a la date de fin");
 				ServletRechercherOperation.LOG.error("La date de debut est superieure a la date de fin");
@@ -166,6 +170,9 @@ public class ServletRechercherOperation extends HttpServlet {
 			dispatcher = request.getRequestDispatcher("/ServletDeconnexion");
 			dispatcher.forward(request, response);
 			return;
+		} catch (NamingException e) {
+			request.setAttribute("erreur", e.getMessage());
+			ServletRechercherOperation.LOG.error("Erreur : " + e.getMessage());
 		} finally {
 			if (utilDb != null) {
 				utilDb.seDeconnecter();
