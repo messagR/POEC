@@ -170,8 +170,8 @@ public class ServletEffectuerVirement extends HttpServlet {
 				utilDb.seDeconnecter();
 			}
 			request.setAttribute("listCompte", listCompte);
-			dispatcher.forward(request, response);
 		}
+		dispatcher.forward(request, response);
 		return;
 	}
 }

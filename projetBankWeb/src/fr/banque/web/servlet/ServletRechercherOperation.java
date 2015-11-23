@@ -131,19 +131,10 @@ public class ServletRechercherOperation extends HttpServlet {
 				if (utilDb.verifieCompteUtilisateur(idClient, idCompte)) {
 					if ((debit != null) && (credit != null)) {
 						listOperation = utilDb.rechercherOp(idCompte, dateDebut, dateFin);
-						ServletRechercherOperation.LOG.info(
-								"----->Operations pour le compte n°{} du client n°{} du {} au {} {} - {}", idCompte,
-								idClient, sdf.format(dateDebut), sdf.format(dateFin), debitCredit, listOperation);
 					} else if (debit != null) {
 						listOperation = utilDb.rechercherOp(idCompte, dateDebut, dateFin, true);
-						ServletRechercherOperation.LOG.info(
-								"----->Operations pour le compte n°{} du client n°{} du {} au {} {} - {}", idCompte,
-								idClient, sdf.format(dateDebut), sdf.format(dateFin), debitCredit, listOperation);
 					} else if (credit != null) {
 						listOperation = utilDb.rechercherOp(idCompte, dateDebut, dateFin, false);
-						ServletRechercherOperation.LOG.info(
-								"----->Operations pour le compte n°{} du client n°{} du {} au {} {} - {}", idCompte,
-								idClient, sdf.format(dateDebut), sdf.format(dateFin), debitCredit, listOperation);
 					} else {
 						listOperation = utilDb.rechercherOp(idCompte);
 						request.setAttribute("erreur", "Vous devez faire au moins un choix pour le debit/credit");
@@ -190,8 +181,8 @@ public class ServletRechercherOperation extends HttpServlet {
 				request.setAttribute("credit", "");
 			}
 			request.setAttribute("listOperation", listOperation);
-			dispatcher.forward(request, response);
 		}
+		dispatcher.forward(request, response);
 		return;
 	}
 }

@@ -103,8 +103,6 @@ public class ServletListeOperation extends HttpServlet {
 					idClient);
 			if (utilDb.verifieCompteUtilisateur(idClient, idCompte)) {
 				listOperation = utilDb.rechercherOp(idCompte);
-				ServletListeOperation.LOG.info("----->Operations pour le compte n°{} du client n°{} - {}", idCompte,
-						idClient, listOperation);
 			} else {
 				request.setAttribute("erreur", "Vous n'avez pas acces au compte n°" + idCompte + " -> Deconnexion");
 				ServletListeOperation.LOG.error("Le client n°{} n'a pas acces au compte n°{}", idClient, idCompte);
@@ -141,8 +139,8 @@ public class ServletListeOperation extends HttpServlet {
 			request.setAttribute("debit", "checked");
 			request.setAttribute("credit", "checked");
 			request.setAttribute("listOperation", listOperation);
-			dispatcher.forward(request, response);
 		}
+		dispatcher.forward(request, response);
 		return;
 	}
 }

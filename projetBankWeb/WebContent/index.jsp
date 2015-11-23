@@ -12,6 +12,7 @@
 		
 	</head>
 	<body>
+	<!-- jmeter:page_index -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>
@@ -23,9 +24,10 @@
 			<div class="container">
 				<div class="row">
 					<div class="twelve columns">
-  						<form id="frmAuthentification" name="frmAuthentification" action="<c:url value="/login.jsp"/>" method="post">
+  						<form id="frmAuthentification" name="frmAuthentification" action="<c:url value="/ServletAccueil"/>" method="post">
   							<a href="javascript:frmAuthentification.submit()">S'authentifier</a>
 			          	</form>
+			          	<br/>
                    		 Nombre de client connecte : 
                    		 <c:if test="${empty listeConnectes}">0</c:if>
                    		 <c:if test="${!empty listeConnectes}"><c:out value="${listeConnectes.size()}" /></c:if>

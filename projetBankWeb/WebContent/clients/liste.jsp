@@ -11,6 +11,7 @@
 		
 	</head>
 	<body>
+		<!-- jmeter:page_liste_clients -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>
@@ -60,7 +61,7 @@
 				</div>
 				<div class="row">
 					<div class="twelve columns">
-  						<form id="frmMenu" name="frmLogin" action="<c:url value="/login.jsp" />" method="post">
+  						<form id="frmMenu" name="frmLogin" action="<c:url value="/ServletAccueil" />" method="post">
 	                        <input type="button" width="98" height="33" value="Retour a l'authentification" onClick="frmLogin.submit()"/>
 			          	</form>
           			</div>

@@ -11,6 +11,7 @@
 		
 	</head>
 	<body>
+		<!-- jmeter:page_liste_comptes -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>
@@ -86,7 +87,7 @@
 				</div>
 				<div class="row">
 					<div class="twelve columns">
-  						<form id="frmMenu" name="frmMenu" action="<c:url value="/menu.jsp" />" method="post">
+  						<form id="frmMenu" name="frmMenu" action="<c:url value="/ServletMenu" />" method="post">
 	                        <input type="button" width="98" height="33" value="Menu" onClick="frmMenu.submit()"/>
 			          	</form>
           			</div>

@@ -64,6 +64,7 @@ public class ServletLogin extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		RequestDispatcher dispatcher;
 		// pour vérifier les champs text : ' or " = '
 		// ou : " or ' = "
 		String login = request.getParameter("inLogin");
@@ -75,7 +76,7 @@ public class ServletLogin extends HttpServlet {
 		if ((login != null) && (password != null)) {
 			if (login.equals("banque") && password.equals("banquier")) {
 				ServletLogin.LOG.info("----->Banquier connecte");
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/clients/liste.jsp");
+				dispatcher = request.getRequestDispatcher("/clients/liste.jsp");
 
 				// FichierProp properties = new FichierProp();
 				AccesDB utilDb = null;
@@ -87,7 +88,6 @@ public class ServletLogin extends HttpServlet {
 					utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
 					utilDb.seConnecter();
 					List<IClient> listClient = utilDb.listeClient();
-					ServletLogin.LOG.info("----->Liste client recupere : {}", listClient);
 					request.setAttribute("listClient", listClient);
 					request.getSession(true).setAttribute("banquier", true);
 					Factory f = Factory.getInstance();
@@ -104,11 +104,10 @@ public class ServletLogin extends HttpServlet {
 					if (utilDb != null) {
 						utilDb.seDeconnecter();
 					}
-					dispatcher.forward(request, response);
 				}
 
 			}else{
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/menu.jsp");
+				dispatcher = request.getRequestDispatcher("/menu.jsp");
 
 				// FichierProp properties = new FichierProp();
 				AccesDB utilDb = null;
@@ -147,15 +146,14 @@ public class ServletLogin extends HttpServlet {
 					if (utilDb != null) {
 						utilDb.seDeconnecter();
 					}
-					dispatcher.forward(request, response);
 				}
 			}
 		} else {
 			request.setAttribute("erreur", "Vous avez ete deconnecte");
 			ServletLogin.LOG.error("Utilisateur deconnecte");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
-			dispatcher.forward(request, response);
+			dispatcher = request.getRequestDispatcher("/login.jsp");
 		}
+		dispatcher.forward(request, response);
 		return;
 	}
 }

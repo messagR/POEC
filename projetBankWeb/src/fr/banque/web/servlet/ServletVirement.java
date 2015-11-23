@@ -81,7 +81,6 @@ public class ServletVirement extends HttpServlet {
 			utilDb.seConnecter();
 			ServletVirement.LOG.info("----->Recherche les comptes du client n°{}", idClient);
 			listCompte = utilDb.listeCompte(idClient);
-			ServletVirement.LOG.info("----->Comptes du client n°{} - {}", idClient, listCompte);
 		} catch (SQLException e) {
 			request.setAttribute("erreur", "Erreur SQL : " + e.getMessage());
 			ServletVirement.LOG.error("Erreur SQL : " + e.getMessage());
@@ -100,8 +99,8 @@ public class ServletVirement extends HttpServlet {
 				utilDb.seDeconnecter();
 			}
 			request.setAttribute("listCompte", listCompte);
-			dispatcher.forward(request, response);
 		}
+		dispatcher.forward(request, response);
 		return;
 	}
 }

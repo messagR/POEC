@@ -11,6 +11,7 @@
 		
 	</head>
 	<body>
+		<!-- jmeter:page_virement -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>
@@ -78,7 +79,7 @@
 	                   		<input type="button" width="98" height="33" value="Valider" id="valider"/>&nbsp;&nbsp;&nbsp;
 							<input type="button" width="98" height="33" value="Annuler" onClick="annuler()"/>
 	          			</form>
-  						<form id="frmMenu" name="frmMenu" action="<c:url value="/menu.jsp" />" method="post">
+  						<form id="frmMenu" name="frmMenu" action="<c:url value="/ServletMenu" />" method="post">
 	                        <input type="button" width="98" height="33" value="Menu" onClick="frmMenu.submit()"/>
 			          	</form>
 	         		</div>
@@ -134,7 +135,7 @@
 								        close: {height: 'toggle'}
 								    }
 								});
-							}else{alert($("#inMontant").val());
+							}else{
 								frmVirements.submit();
 							}
 						}

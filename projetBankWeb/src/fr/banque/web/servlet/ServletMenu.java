@@ -2,10 +2,7 @@ package fr.banque.web.servlet;
 
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -18,21 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.banque.entity.IClient;
-import projetBd.AccesDB;
-
 /**
  * Servlet implementation class ServletClient
  */
-@WebServlet("/ServletChoixClient")
-public class ServletChoixClient extends HttpServlet {
+@WebServlet("/ServletMenu")
+public class ServletMenu extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ServletChoixClient() {
+	public ServletMenu() {
 		super();
 	}
 
@@ -57,36 +51,15 @@ public class ServletChoixClient extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("clients/liste.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/menu.jsp");
 
-		Boolean banquier = (Boolean) request.getSession(true).getAttribute("banquier");
-		if ((banquier == null) || !banquier) {
+		Integer idClient = (Integer) request.getSession(true).getAttribute("idClient");
+		if (idClient == null) {
 			request.setAttribute("erreur", "Vous avez ete deconnecte");
-			ServletChoixClient.LOG.error("Utilisateur deconnecte");
+			ServletMenu.LOG.error("Utilisateur deconnecte");
 			dispatcher = request.getRequestDispatcher("/login.jsp");
 			dispatcher.forward(request, response);
 			return;
-		}
-
-		// FichierProp properties = new FichierProp();
-		AccesDB utilDb = null;
-		try {
-			// utilDb = new AccesDB(properties.getUtilDbDriver());
-			// utilDb.seConnecter(properties.getUtilDbLogin(),
-			// properties.getUtilDbPassword(),
-			// properties.getUtilDbUrl());
-			utilDb = new AccesDB("jdbc/dataSourceProjetBankWeb");
-			utilDb.seConnecter();
-			List<IClient> listClient = utilDb.listeClient();
-			request.setAttribute("listClient", listClient);
-			request.getSession(true).setAttribute("banquier", true);
-		} catch (SQLException | NamingException e) {
-			request.setAttribute("erreur", "Erreur SQL : " + e.getMessage());
-			ServletChoixClient.LOG.error("Erreur SQL : " + e.getMessage());
-		} finally {
-			if (utilDb != null) {
-				utilDb.seDeconnecter();
-			}
 		}
 		dispatcher.forward(request, response);
 		return;

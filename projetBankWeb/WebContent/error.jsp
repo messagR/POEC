@@ -11,6 +11,7 @@
 		
 	</head>
 	<body>
+		<!-- jmeter:page_erreur -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>

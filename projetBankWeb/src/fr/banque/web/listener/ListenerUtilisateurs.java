@@ -40,7 +40,9 @@ public class ListenerUtilisateurs implements HttpSessionListener {
 		ListenerUtilisateurs.LOG.error("session supprimee: {}", event.getSource());
 		Map<String, IUtilisateur> listeConnectes = (Map<String, IUtilisateur>) event.getSession().getServletContext()
 				.getAttribute("listeConnectes");
-		String idSession = event.getSession().getId();
-		listeConnectes.remove(idSession);
+		if (listeConnectes != null) {
+			String idSession = event.getSession().getId();
+			listeConnectes.remove(idSession);
+		}
 	}
 }

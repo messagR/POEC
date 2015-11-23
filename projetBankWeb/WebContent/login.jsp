@@ -12,6 +12,7 @@
 		
 	</head>
 	<body>
+		<!-- jmeter:page_login -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>

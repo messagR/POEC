@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/includes/TagLibs.jsp" %>
 <!doctype html>
- <html lang="fr">
+<html lang="fr">
 	<head>
 		<meta charset="UTF-8"> <!-- UTF-8 pour IE sinon peut importe la casse -->
 		<TITLE>Ma banque</TITLE>
@@ -11,6 +11,7 @@
 		
 	</head>
 	<body>
+		<!-- jmeter:page_404 -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>

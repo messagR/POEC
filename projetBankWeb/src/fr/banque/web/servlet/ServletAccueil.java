@@ -18,15 +18,15 @@ import org.apache.logging.log4j.Logger;
 /**
  * Servlet implementation class ServletClient
  */
-@WebServlet("/ServletListeClient")
-public class ServletListeClient extends HttpServlet {
+@WebServlet("/ServletAccueil")
+public class ServletAccueil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ServletListeClient() {
+	public ServletAccueil() {
 		super();
 	}
 
@@ -51,26 +51,8 @@ public class ServletListeClient extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/menu.jsp");
-
-		Boolean banquier = (Boolean) request.getSession(true).getAttribute("banquier");
-		if ((banquier == null) || !banquier) {
-			request.setAttribute("erreur", "Vous avez ete deconnecte");
-			ServletListeClient.LOG.error("Utilisateur deconnecte");
-			dispatcher = request.getRequestDispatcher("/login.jsp");
-			dispatcher.forward(request, response);
-			return;
-		}
-
-		Integer idClient;
-		if (request.getParameter("inClient") != null) {
-			idClient = new Integer(request.getParameter("inClient"));
-			request.getSession(true).setAttribute("idClient", idClient);
-		} else {
-			idClient = (Integer) request.getSession(true).getAttribute("idClient");
-		}
-		ServletListeClient.LOG.info("----->Recuperation du client n°{}", idClient);
-
+		ServletAccueil.LOG.info("----->Authentification");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
 		dispatcher.forward(request, response);
 		return;
 	}

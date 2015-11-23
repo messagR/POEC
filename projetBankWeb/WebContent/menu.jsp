@@ -11,6 +11,7 @@
 		
 	</head>
 	<body>
+		<!-- jmeter:page_menu -->
 		<jsp:include page="/includes/scripts.jsp" />
 <!------------------------------ ENTETE ------------------------------>
 		<header>
@@ -43,7 +44,7 @@
 			                   		<c:if test="${empty listeConnectes}">0</c:if>
 			                   		<c:if test="${!empty listeConnectes}"><c:out value="${listeConnectes.size()}" /></c:if>
 		                   		</li>
-								<c:if test="${banquier}">
+		                   		<c:if test="${banquier}">
 			                   		<li>
 		  								<form id="frmChangerClient" name="frmChangerClient" action="<c:url value="/ServletChoixClient" />" method="post">
 			                      			<a href="javascript:frmChangerClient.submit()"> Changer de client</a>
