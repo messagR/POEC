@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration status="error" strict="true" name="XMLConfigTest"
+	packages="org.apache.logging.log4j.test">
+
+	<Appenders>
+		<Console name="stdout" target="SYSTEM_OUT">
+			<PatternLayout pattern="[%d{dd/MM/yyyy HH:mm:ss}] - %5p - %C.%M(...) - %m %n" />
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.exo.jms" level="ALL" additivity="false">
+			<AppenderRef ref="stdout" />
+		</Logger>
+
+		<Root level="WARN">
+			<AppenderRef ref="stdout" />
+		</Root>
+	</Loggers>
+
+</Configuration>
