@@ -12,7 +12,7 @@
 <body>
 <h1><c:out value="${message}"/> a bien ete envoye</h1>
 <a href="<c:url value="/envoyer.jsp"/>">Envoyer un message</a><br/>
-<a href="<c:url value="/JmsConsumer"/>">Recevoir les messages<a/><br/>
+<a href="<c:url value="/JmsConsumer"/>">Recevoir les messages</a><br/>
 <a href="http://localhost:8161/">URL d'administration Active MQ	(admin/admin)</a>
 </body>
 </html>

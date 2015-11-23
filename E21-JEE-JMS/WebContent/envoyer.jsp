@@ -15,7 +15,7 @@
 	<textarea name="message" rows="10" cols="50"></textarea><br/><br/>
 	<input type="submit" value="Envoyer">
 </form><br/><br/>
-<a href="<c:url value="/JmsConsumer"/>">Recevoir les messages<a/><br/>
+<a href="<c:url value="/JmsConsumer"/>">Recevoir les messages</a><br/>
 <a href="http://localhost:8161/">URL d'administration Active MQ	(admin/admin)</a>
 </body>
 </html>

@@ -12,7 +12,7 @@
 <body>
 <h1>Recuperation message impossible : <c:out value="${erreur}"/></h1>
 <a href="<c:url value="/envoyer.jsp"/>">Envoyer un message</a><br/>
-<a href="<c:url value="/JmsConsumer"/>">Recevoir les messages<a/><br/>
+<a href="<c:url value="/JmsConsumer"/>">Recevoir les messages</a><br/>
 <a href="http://localhost:8161/">URL d'administration Active MQ	(admin/admin)</a>
 </body>
 </html>

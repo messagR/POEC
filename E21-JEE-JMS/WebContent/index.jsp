@@ -10,7 +10,7 @@
 <title>JMS</title>
 </head>
 <body>
-	<a href="http://localhost:8161/">URL d'administration Active MQ
-		(admin/admin)</a>
+<a href="<c:url value="/envoyer.jsp"/>">Envoyer un message</a><br/>
+<a href="http://localhost:8161/">URL d'administration Active MQ	(admin/admin)</a>
 </body>
 </html>
