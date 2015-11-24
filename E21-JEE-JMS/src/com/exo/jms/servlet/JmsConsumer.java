@@ -17,12 +17,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Servlet implementation class JmsConsumer
  */
 @WebServlet("/JmsConsumer")
 public class JmsConsumer extends AbstractJmsServlet {
 	private static final long serialVersionUID = 1L;
+	private final static Logger LOG = LogManager.getLogger();
 
 	/**
 	 * @see AbstractJmsServlet#AbstractJmsServlet()
@@ -65,6 +69,7 @@ public class JmsConsumer extends AbstractJmsServlet {
 				}
 			} while (message != null);
 		} catch (JMSException e) {
+			JmsConsumer.LOG.error(e.getMessage());
 			request.setAttribute("erreur", e.getMessage());
 			dispatcher = request.getRequestDispatcher("/erreur_c.jsp");
 			dispatcher.forward(request, response);
@@ -74,21 +79,21 @@ public class JmsConsumer extends AbstractJmsServlet {
 				try {
 					consumer.close();
 				} catch (JMSException e) {
-					e.printStackTrace();
+					JmsConsumer.LOG.error(e.getMessage());
 				}
 			}
 			if (session != null) {
 				try {
 					session.close();
 				} catch (JMSException e) {
-					e.printStackTrace();
+					JmsConsumer.LOG.error(e.getMessage());
 				}
 			}
 			if (connection != null) {
 				try {
 					connection.close();
 				} catch (JMSException e) {
-					e.printStackTrace();
+					JmsConsumer.LOG.error(e.getMessage());
 				}
 			}
 		}
