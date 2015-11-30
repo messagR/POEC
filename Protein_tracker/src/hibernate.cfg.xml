@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+  <property name="hibernate.connection.password">root</property>
+  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306</property>
+  <property name="hibernate.connection.username">root</property>
+  <property name="hibernate.default_schema">protein_tracker</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  <property name="hibernate.show_sql">true</property>
+  <property name="hibernate.hbm2ddl.auto">update</property>
+  <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+  <property name="hibernate.cache.use_second_level_cache">true</property>
+  <!-- demande au jdbc d'envoyer les requetes par 20 au lieu de tout faire à la fin -->
+  <property name="hibernate.jdbc.batch_size">20</property>
+  <mapping resource="com/simpleprogram/User.hbm.xml"/>
+  <mapping resource="com/simpleprogram/ProteinData.hbm.xml"/>
+  <mapping resource="com/simpleprogram/UserHistory.hbm.xml"/>
+  <mapping resource="com/simpleprogram/GoalAlert.hbm.xml"/>
+  <!-- 
+  <mapping resource="com/simpleprogram/ancien3/User.hbm.xml"/>
+  <mapping resource="com/simpleprogram/ancien3/ProteinData.hbm.xml"/>
+  <mapping resource="com/simpleprogram/ancien3/UserHistory.hbm.xml"/>
+  <mapping resource="com/simpleprogram/ancien3/GoalAlert.hbm.xml"/>
+  
+  <mapping resource="com/simpleprogram/ancien2/User.hbm.xml"/>
+  <mapping resource="com/simpleprogram/ancien2/UserHistory.hbm.xml"/>
+  
+  <mapping resource="com/simpleprogram/ancien/User.hbm.xml"/>
+   -->
+ </session-factory>
+</hibernate-configuration>

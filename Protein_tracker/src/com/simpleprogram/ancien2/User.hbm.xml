@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 25 nov. 2015 11:30:14 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+ <class name="com.simpleprogram.ancien2.User" table="USER">
+  <id name="id" type="int">
+   <column name="ID" not-null="true"/>
+   <generator class="increment"/>
+  </id>
+  <property name="name" type="string">
+   <column name="NAME" not-null="true"/>
+  </property>
+  <component name="proteinData">
+   <property name="total" type="int">
+    <column default="0" name="TOTAL" not-null="true"/>
+   </property>
+   <property name="goal" type="int">
+    <column default="100" name="GOAL" not-null="true"/>
+   </property>
+  </component>
+  <!-- <set name="history" table="USER_HISTORY"> -->
+  <list name="history" table="USER_HISTORY" inverse="true" cascade="save-update">
+   <key column="ID_USER"/>
+   <!-- pour les list et non pour les set/Map/Collection -->
+   <list-index column="POSITION" />
+   <one-to-many class="com.simpleprogram.ancien2.UserHistory"/>
+  </list>
+  <!-- </set> -->
+ </class>
+</hibernate-mapping>

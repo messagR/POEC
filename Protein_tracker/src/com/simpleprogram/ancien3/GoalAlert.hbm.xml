@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 26 nov. 2015 15:12:28 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.simpleprogram.ancien3.GoalAlert" table="GOAL_ALERT">
+        <id name="id" type="int">
+            <column name="ID" />
+            <generator class="increment" />
+        </id>
+        <property name="message" type="string">
+            <column name="MESSAGE" />
+        </property>
+    </class>
+</hibernate-mapping>
