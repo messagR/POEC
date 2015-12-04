@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C/DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Authentification</title>
+</h:head>
+<h:body>
+	<h:form>
+		<h:outputText value="Adresse Email" />
+		<h:inputText id="mail" value="#{authBean.mail}">
+			<f:ajax event="keyup" execute="mail" render="available" listener="#{authBean.verify}" />
+		</h:inputText>
+		<h:outputText id="available" value="#{authBean.available}" /><br/><br/>
+		<h:outputText value="Mot de Passe" /> <h:inputSecret value="#{authBean.password}" /><br/><br/>
+		<h:commandButton value="Suite" action="bienvenue" />&nbsp;&nbsp;
+		<h:commandButton value="Connecter" action="#{authBean.login}" />
+	</h:form>
+</h:body>
+</html>

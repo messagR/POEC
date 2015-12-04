@@ -1,0 +1,21 @@
+<ui:composition template="/WEB-INF/template/base.xhtml"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:p="http://primefaces.org/ui">
+     <ui:define name="content">
+          <p:dataGrid var="product" value="#{productListView.products}" columns="1">
+         	<p:column>
+         		<p:panel header="#{product.name}" style="border: 0">
+       			<h:panelGrid columns="2">
+       				<h:outputText value="#{product.description}"/>
+       				<h:outputText value="#{product.price}" style="color: blue">
+       					<f:convertNumber type="currency" currencySymbol="€"/>
+       				</h:outputText>
+       			</h:panelGrid>
+         		</p:panel>
+         	</p:column>
+         </p:dataGrid>
+    </ui:define>
+</ui:composition>

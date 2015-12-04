@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14489634325790" configfile="/JSFProject/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="auth.xhtml" id="pf14490624150115" referenceLink="//@navigationRule.1/@navigationCase.2/@toViewId|" outlinks="pf14490624150116 pf14490624150117 pf14490624150118" inlinks="pf14490624150118" path="/auth.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="welcome.xhtml" id="pf14490624150119" referenceLink="//@navigationRule.1/@navigationCase.1/@toViewId|" inlinks="pf14490624150116 pf14490624150117 pf144906524862510" path="/welcome.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="l.xhtml" id="pf144906524862511" referenceLink="//@navigationRule.1/@navigationCase.1/@toViewId|" outlinks="pf144906524862510 pf144906586334812" inlinks="pf144906586334812" path="/language.xhtml"/>
+  <links id="pf14490624150116" target="pf14490624150119" source="pf14490624150115" outcome="bienvenue"/>
+  <links id="pf14490624150117" target="pf14490624150119" source="pf14490624150115" outcome="ok"/>
+  <links id="pf14490624150118" target="pf14490624150115" source="pf14490624150115" outcome="ko"/>
+  <links id="pf144906524862510" target="pf14490624150119" source="pf144906524862511" outcome="ok"/>
+  <links id="pf144906586334812" target="pf144906524862511" source="pf144906524862511" outcome="ko"/>
+</pageflow:Pageflow>

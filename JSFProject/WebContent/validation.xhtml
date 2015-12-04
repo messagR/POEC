@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C/DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Validation</title>
+</h:head>
+<h:body>
+	<h:form>
+		<h1>Qui êtes vous ?</h1>
+		
+		<h:panelGrid columns="3">
+		
+		<h:outputLabel for="name" value="Votre nom" />
+		<h:inputText id="name" value="#{personBean.person.name}" required="true" requiredMessage="Vous devez donner un nom !"/>
+		<h:message for="name" style="color:red" />
+		
+		<h:outputLabel for="name" value="Votre âge" />
+		<h:inputText id="age" value="#{personBean.person.age}" required="true" requiredMessage="Vous devez donner un âge !" validatorMessage="L'âge doit être compris entre 13 et 130 ans" >
+			<f:validateDoubleRange minimum="13" maximum="130" for="age" />
+		</h:inputText>
+		<h:message for="age" style="color:red" />
+		
+		<h:outputLabel for="image" value="Votre image" />
+		<h:inputText id="image" value="#{personBean.person.image}">
+			<f:validator validatorId="imageValidator" for="image" />
+		</h:inputText>
+		<h:message for="image" style="color:red" />
+		
+		<h:selectBooleanCheckbox id="musicCheckBox" value="#{personBean.likesMusic}" label="j'aime la musique classique"  />
+		<h:inputText id="music" value="#{personBean.person.music}" validator="#{personBean.validateLikesMusic}" />
+		<h:message for="music" style="color:red" />
+		
+		</h:panelGrid><br/>
+		
+		<h:commandButton value="Valider" />
+	</h:form>
+</h:body>
+</html>

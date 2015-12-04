@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C/DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title><h:outputText value="Composant" /></title>
+	<!-- <h:outputStylesheet library="css" name="styles.css" /> -->
+	<h:outputStylesheet name="css/styles.css" />
+	<h:outputScript name="js/javascript.js" />
+</h:head>
+<h:body>
+	<h:dataTable value="#{dataTableBean.persons}" var="person" border="1" rowClasses="row1,row2">
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="id" />
+			</f:facet>
+			<h:outputText value="#{person.id}" />
+		</h:column>
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="name" />
+			</f:facet>
+			<h:outputText value="#{person.name}" />
+		</h:column>
+		<h:column>
+			<f:facet name="header">
+				<h:outputText value="image" />
+			</f:facet>
+			<h:graphicImage name="images/#{person.image}" />
+		</h:column>
+	</h:dataTable>
+</h:body>
+</html>

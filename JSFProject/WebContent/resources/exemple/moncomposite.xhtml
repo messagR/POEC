@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:composite="http://xmlns.jcp.org/jsf/composite">
+
+	<composite:interface>
+		<composite:attribute name="usernameLabel" />
+		<composite:attribute name="usernameValue" />
+		<composite:attribute name="passwordLabel" />
+		<composite:attribute name="passwordValue" />
+		<composite:attribute name="loginButtonLabel" />
+		<composite:attribute name="loginButtonAction" method-signature="java.lang.String login()" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<h:form>
+			<h:panelGrid columns="2" id="loginPanel">
+				#{cc.attrs.usernameLabel} :
+				<h:inputText id="username" value="#{cc.attrs.usernameValue}" />
+				#{cc.attrs.passwordLabel} :
+				<h:inputText id="password" value="#{cc.attrs.passwordValue}" />
+				<h:commandButton id="valider" value="#{cc.attrs.loginButtonLabel}" action="#{cc.attrs.loginButtonAction}" />
+			</h:panelGrid>
+		</h:form>
+	</composite:implementation>
+
+</html>

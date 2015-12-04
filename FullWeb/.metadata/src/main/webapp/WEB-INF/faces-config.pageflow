@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14492191773460" configfile="/FullWeb/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="connection.xhtml" x="122" y="178" id="pf14492352068321" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" outlinks="pf14492352068322 pf14492352068323" inlinks="pf14492352068323" path="/connection.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="category.xhtml" x="338" y="178" id="pf14492352068324" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf14492352068322" path="/category.xhtml"/>
+  <links id="pf14492352068322" target="pf14492352068324" source="pf14492352068321" outcome="ok"/>
+  <links id="pf14492352068323" target="pf14492352068321" source="pf14492352068321" outcome="ko">
+    <bendPoints d1Height="-36" d2Height="-36"/>
+    <bendPoints d1Width="-64" d1Height="-36" d2Width="-64" d2Height="-36"/>
+    <bendPoints d1Width="-64" d2Width="-64"/>
+  </links>
+</pageflow:Pageflow>

@@ -1,0 +1,24 @@
+<ui:composition template="/WEB-INF/template/base.xhtml"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:p="http://primefaces.org/ui">
+     <ui:define name="content">
+     <h:form id="category">
+         <p:dataGrid var="category" value="#{categoryListView.categories}" columns="2">
+         	<p:column>
+       			<p:link outcome="products">
+      				<f:param name="categoryName" value="#{category.name}"/>
+	         		<p:panel header="#{category.name}" style="border: 0">
+	         			<h:panelGrid columns="1">
+	         				<p:graphicImage value="resources/images/#{category.image}"/>
+	         				<h:outputText value="#{category.description}"/>
+	         			</h:panelGrid>
+    	     		</p:panel>
+				</p:link>
+         	</p:column>
+         </p:dataGrid>
+     </h:form>
+     </ui:define>
+</ui:composition>

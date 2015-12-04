@@ -1,0 +1,26 @@
+<ui:composition template="/WEB-INF/template/base.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:define name="title"><p:outputLabel value="#{msg['connection.title']}" /></ui:define>
+	<ui:define name="content">
+		<h:form id="auth">
+		    <h:panelGrid id="grid" columns="3" cellpadding="5">
+				<p:outputLabel value="#{msg['connection.mail']}" />
+				<p:inputText id="mail" value="#{authBean.mail}" required="true" validatorMessage="#{msg['connection.mail.wrong']}">
+					<f:validateRegex pattern="^[a-z0-9]+([_|\.|-][a-z0-9]+)*@[a-z0-9]+([_|\.|-][a-z0-9]+)*(\.([a-z]){2,6})$" for="mail" />
+				</p:inputText>
+				<p:message for="mail" style="color:red" />
+		 
+		        <p:outputLabel value="#{msg['connection.password']}" />
+		        <p:password value="#{authBean.password}" required="true" id="password" type="" />
+				<p:message for="password" style="color:red" />
+	    		<p:growl id="growl" showDetail="false" sticky="true" />
+		    </h:panelGrid>
+			<p:commandButton value="#{msg['connection.title']}" action="#{authBean.login}" update="grid" />
+		</h:form>
+	</ui:define>
+</ui:composition>

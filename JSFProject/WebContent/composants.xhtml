@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C/DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Composant</title>
+</h:head>
+<h:body>
+	<h:form>
+		<h:inputText value="Entrez un texte" /><br />
+		<h:inputSecret value="c'est un secret" /><br/>
+		<h:inputTextarea value="ceci est une zone de texte" /><br/>
+		<h:selectBooleanCheckbox value="true" /> <h:selectBooleanCheckbox value="false" /> <h:selectBooleanCheckbox value="toto" /><br/>
+		selectManyCheckbox<h:selectManyCheckbox value="#{manyCheckBoxBean.selectedPersons}">
+			<f:selectItem itemValue="1" itemLabel="John"/>
+			<f:selectItem itemValue="2" itemLabel="Sophie"/>
+			<f:selectItem itemValue="3" itemLabel="Jean"/>
+			<f:selectItem itemValue="4" itemLabel="Laura"/>
+		</h:selectManyCheckbox><br/>
+		<h:selectManyCheckbox value="#{manyCheckBoxBean.selectedPersons}">
+			<f:selectItems value="#{manyCheckBoxBean.persons}" var="person" itemValue="#{person.id}" itemLabel="#{person.name}"/>
+		</h:selectManyCheckbox><br/><br/>
+		selectOneRadio<h:selectOneRadio value="#{selectOneRadioBean.selectedPersonsId}">
+			<f:selectItem itemValue="1" itemLabel="Jean"/>
+			<f:selectItem itemValue="2" itemLabel="Laura"/>
+			<f:selectItem itemValue="3" itemLabel="John"/>
+			<f:selectItem itemValue="4" itemLabel="Sophie"/>
+		</h:selectOneRadio><br/>
+		<h:selectOneRadio value="#{selectOneRadioBean.selectedPersonsId}">
+			<f:selectItems value="#{selectOneRadioBean.persons}" var="person" itemValue="#{person.id}" itemLabel="#{person.name}"/>
+		</h:selectOneRadio><br/><br/>
+		selectOneListbox<h:selectOneListbox value="#{selectOneListBoxBean.selectedPersonsId}">
+			<f:selectItem itemValue="1" itemLabel="Jean"/>
+			<f:selectItem itemValue="2" itemLabel="Laura"/>
+			<f:selectItem itemValue="3" itemLabel="John"/>
+			<f:selectItem itemValue="4" itemLabel="Sophie"/>
+		</h:selectOneListbox><br/>
+		<h:selectOneListbox value="#{selectOneListBoxBean.selectedPersonsId}">
+			<f:selectItems value="#{selectOneListBoxBean.persons}" var="person" itemValue="#{person.id}" itemLabel="#{person.name}"/>
+		</h:selectOneListbox><br/><br/>
+		selectManyListbox<h:selectManyListbox value="#{selectManyListBoxBean.selectedPersons}">
+			<f:selectItem itemValue="1" itemLabel="Jean"/>
+			<f:selectItem itemValue="2" itemLabel="Laura"/>
+			<f:selectItem itemValue="3" itemLabel="John"/>
+			<f:selectItem itemValue="4" itemLabel="Sophie"/>
+		</h:selectManyListbox><br/>
+		<h:selectManyListbox value="#{selectManyListBoxBean.selectedPersons}">
+			<f:selectItems value="#{selectManyListBoxBean.persons}" var="person" itemValue="#{person.id}" itemLabel="#{person.name}"/>
+		</h:selectManyListbox><br/><br/>
+		selectOneMenu<h:selectOneMenu value="#{selectOneMenuBean.selectedPersonsId}">
+			<f:selectItem itemValue="1" itemLabel="Jean"/>
+			<f:selectItem itemValue="2" itemLabel="Laura"/>
+			<f:selectItem itemValue="3" itemLabel="John"/>
+			<f:selectItem itemValue="4" itemLabel="Sophie"/>
+		</h:selectOneMenu><br/>
+		<h:selectOneMenu value="#{selectOneMenuBean.selectedPersonsId}">
+			<f:selectItems value="#{selectOneMenuBean.persons}" var="person" itemValue="#{person.id}" itemLabel="#{person.name}"/>
+		</h:selectOneMenu><br/><br/>
+		selectManyMenu<h:selectManyMenu value="#{selectManyMenuBean.selectedPersons}" >
+			<f:selectItem itemValue="1" itemLabel="Jean"/>
+			<f:selectItem itemValue="2" itemLabel="Laura"/>
+			<f:selectItem itemValue="3" itemLabel="John"/>
+			<f:selectItem itemValue="4" itemLabel="Sophie"/>
+		</h:selectManyMenu><br/>
+		<h:selectManyMenu value="#{selectManyMenuBean.selectedPersons}">
+			<f:selectItems value="#{selectOneMenuBean.persons}" var="person" itemValue="#{person.id}" itemLabel="#{person.name}"/>
+		</h:selectManyMenu><br/>
+		<h:commandButton value="Valider" />
+	</h:form>
+</h:body>
+</html>
