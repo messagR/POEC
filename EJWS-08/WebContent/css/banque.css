@@ -1,0 +1,62 @@
+p.elTitre1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font: italic 14px;
+}
+
+p.elTitre2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font: bold 14px;
+	text-decoration: underline;
+}
+
+p.elTitre3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font: bold 17px;
+}
+
+td.elLibelle1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font: italic 14px;
+}
+
+td.elLibelleTableau {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	font: 14px;
+}
+
+tr.elLigneTableau1 {
+	background: #aabac5;
+}
+
+tr.elLigneTableau2 {
+	background: #f7b260;
+}
+
+td.elCelluleTableau1 {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	font: 13px;
+}
+
+td.elCelluleTableau2 {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: right;
+	font: 13px;
+}
+
+td.elCelluleTableau3 {
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: left;
+	font: 13px;
+}
+
+body.elBody {
+	text-align: center;
+	background: #AABAC5;
+	background-image: url("../images/image-fond.jpg");
+}
+
+table {
+	border-color: black;
+}
