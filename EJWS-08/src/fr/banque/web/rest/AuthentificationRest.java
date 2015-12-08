@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -198,7 +197,7 @@ public class AuthentificationRest {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String authentifier(@QueryParam("login") String login, @QueryParam("password") String pwd,
-			@Context HttpServletRequest request, @Context HttpServletResponse response)
+			@Context HttpServletRequest request)
 					throws ServletException, IOException {
 		JSONObject obj = new JSONObject();
 
