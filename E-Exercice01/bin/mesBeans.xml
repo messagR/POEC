@@ -2,17 +2,21 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	   http://www.springframework.org/schema/beans/spring-beans.xsd
-http://www.springframework.org/schema/context
-http://www.springframework.org/schema/context/spring-context.xsd">
+	   	http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd">
  
  	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
  	<!-- pas de destroy sur les bean avec un scope prototype -->
 	<bean id="monClient" class="com.exo.Client" scope="prototype" init-method="init"/>
 
 	<bean id="monClientConstructor" class="com.exo.Client" init-method="init" destroy-method="destroy">
-	
 		<constructor-arg value="SMITH" />
 		<constructor-arg value="Johnny" />
 		<constructor-arg value="40" />
@@ -24,12 +28,16 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 		<property name="age" value="35"/>
 	</bean>
 
-	<bean id="monClientConstructorProperty" class="com.exo.Client">
-		<constructor-arg value="SMITH" />
-		<constructor-arg value="John" />
+	<bean id="pNom" class="java.lang.String">
+		<constructor-arg value="TOTO" />
+	</bean>
+	<bean id="monClientConstructorProperty" class="com.exo.Client"  c:_1="John" c:_0-ref="pNom" p:prenom="Johnny" p:nom-ref="pNom">
+		<!-- <constructor-arg value="SMITH" /> -->
+		<!-- <constructor-arg value="John" /> -->
 		<constructor-arg value="40" />
 		
-		<property name="prenom" value="Johnny"/>
+		<!-- <property name="nom" ref="pNom" /> -->
+		<!-- <property name="prenom" value="Johnny"/> -->
 	</bean>
 
 	<bean id="monAdresse" class="com.exo.Adresse" >
@@ -64,13 +72,17 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 		<constructor-arg value="33" />
 		
 		<property name="adresses">
-			<list>
+			<!-- <list>
 				<ref bean="monAdresse"/>
 				<ref bean="monAdresse2"/>
-			</list>
+			</list> -->
+			<util:list value-type="com.exo.Adresse">
+				<ref bean="monAdresse"/>
+				<ref bean="monAdresse2"/>
+			</util:list>
 		</property>
 	</bean>
-	
+		
 	<context:property-placeholder location="adresses.properties"/>
 	
 	<bean id="moi3" class="com.exo.Client">
@@ -82,6 +94,7 @@ http://www.springframework.org/schema/context/spring-context.xsd">
 			<bean class="java.util.Vector">
 				<constructor-arg>
 					<list>
+						<!-- les innerBeans ont tous des scope prototype -->
 						<bean class="com.exo.Adresse">
 							<property name="codePostal" value="${addr1.codePostal}"/>
 							<property name="adresse" value="${addr1.adresse}"/>
