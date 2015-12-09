@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd">
+ 
+ 	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+ 	<!-- pas de destroy sur les bean avec un scope prototype -->
+	<bean id="monClient" class="com.exo.Client" scope="prototype" init-method="init"/>
+
+	<bean id="monClientConstructor" class="com.exo.Client" init-method="init" destroy-method="destroy">
+	
+		<constructor-arg value="SMITH" />
+		<constructor-arg value="Johnny" />
+		<constructor-arg value="40" />
+	</bean>
+
+	<bean id="monClientProperty" class="com.exo.Client" init-method="init" lazy-init="true">
+		<property name="nom" value="SMITH"/>
+		<property name="prenom" value="John"/>
+		<property name="age" value="35"/>
+	</bean>
+
+	<bean id="monClientConstructorProperty" class="com.exo.Client">
+		<constructor-arg value="SMITH" />
+		<constructor-arg value="John" />
+		<constructor-arg value="40" />
+		
+		<property name="prenom" value="Johnny"/>
+	</bean>
+
+	<bean id="monAdresse" class="com.exo.Adresse" >
+		<property name="adresse" value="9 quai du Chanoine Winterer" />
+		<property name="ville" value="STRASBOURG" />
+		<property name="pays" value="FRANCE" />
+		<property name="codePostal" value="67000" />
+	</bean>
+
+	<bean id="moi" class="com.exo.Client">
+		<constructor-arg value="ZUNINO CHAMPOUGNY" />
+		<constructor-arg value="Angélique" />
+		<constructor-arg value="33" />
+		
+		<property name="adresses">
+			<list>
+				<ref bean="monAdresse"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="monAdresse2" class="com.exo.Adresse">
+		<constructor-arg value="67000" />
+		<constructor-arg value="9 quai du Chanoine Winterer" />
+		<constructor-arg value="STRASBOURG" />
+		<constructor-arg value="FRANCE" />
+	</bean>
+
+	<bean id="moi2" class="com.exo.Client">
+		<constructor-arg value="ZUNINO CHAMPOUGNY" />
+		<constructor-arg value="Angélique" />
+		<constructor-arg value="33" />
+		
+		<property name="adresses">
+			<list>
+				<ref bean="monAdresse"/>
+				<ref bean="monAdresse2"/>
+			</list>
+		</property>
+	</bean>
+	
+	<context:property-placeholder location="adresses.properties"/>
+	
+	<bean id="moi3" class="com.exo.Client">
+		<constructor-arg value="ZUNINO CHAMPOUGNY" />
+		<constructor-arg value="Angélique" />
+		<constructor-arg value="33" />
+
+		<property name="adresses">
+			<bean class="java.util.Vector">
+				<constructor-arg>
+					<list>
+						<bean class="com.exo.Adresse">
+							<property name="codePostal" value="${addr1.codePostal}"/>
+							<property name="adresse" value="${addr1.adresse}"/>
+							<property name="ville" value="${addr1.ville}"/>
+							<property name="pays" value="${addr1.pays}"/>
+						</bean>
+						<bean class="com.exo.Adresse">
+							<property name="codePostal" value="${addr2.codePostal}"/>
+							<property name="adresse" value="${addr2.adresse}"/>
+							<property name="ville" value="${addr2.ville}"/>
+							<property name="pays" value="${addr2.pays}"/>
+						</bean>
+					</list>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+</beans>
