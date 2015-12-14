@@ -7,7 +7,7 @@ package com.banque.dao;
 
 import java.util.List;
 
-import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import com.banque.dao.ex.ExceptionDao;
 import com.banque.entity.IUtilisateurEntity;
@@ -16,6 +16,7 @@ import com.banque.entity.UtilisateurEntity;
 /**
  * Gestion des operations.
  */
+@Repository("utilisateurDAO")
 public class UtilisateurDAO extends AbstractDAO<IUtilisateurEntity> implements IUtilisateurDAO {
 
 	/**
@@ -47,8 +48,8 @@ public class UtilisateurDAO extends AbstractDAO<IUtilisateurEntity> implements I
 	 *             si une erreur survient
 	 */
 	@Override
-	public IUtilisateurEntity selectLogin(String pLogin, Session pSession) throws ExceptionDao {
-		List<IUtilisateurEntity> allLogin = super.selectAll("entity.login='" + pLogin + "'", null, pSession);
+	public IUtilisateurEntity selectLogin(String pLogin) throws ExceptionDao {
+		List<IUtilisateurEntity> allLogin = super.selectAll("entity.login='" + pLogin + "'", null);
 		if ((allLogin == null) || allLogin.isEmpty()) {
 			return null;
 		}

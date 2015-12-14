@@ -7,8 +7,6 @@ package com.banque.dao;
 
 import java.util.List;
 
-import org.hibernate.Session;
-
 import com.banque.dao.ex.ExceptionDao;
 import com.banque.entity.IEntity;
 
@@ -45,7 +43,7 @@ public interface IDAO<T extends IEntity> {
 	 * @throws ExceptionDao
 	 *             si une erreur survient
 	 */
-	public abstract T insert(T uneEntite, Session pSession) throws ExceptionDao;
+	public abstract T insert(T uneEntite) throws ExceptionDao;
 
 	/**
 	 * Met a jour un element.
@@ -58,7 +56,7 @@ public interface IDAO<T extends IEntity> {
 	 * @throws ExceptionDao
 	 *             si une erreur survient
 	 */
-	public abstract T update(T uneEntite, Session pSession) throws ExceptionDao;
+	public abstract T update(T uneEntite) throws ExceptionDao;
 
 	/**
 	 * Supprime un element.
@@ -71,7 +69,7 @@ public interface IDAO<T extends IEntity> {
 	 * @throws ExceptionDao
 	 *             si une erreur survient
 	 */
-	public abstract boolean delete(T pUneEntite, Session pSession) throws ExceptionDao;
+	public abstract boolean delete(T pUneEntite) throws ExceptionDao;
 
 	/**
 	 * Selectionne l'element ayant comme valeur de clef primaire le parametre.
@@ -85,7 +83,7 @@ public interface IDAO<T extends IEntity> {
 	 * @throws ExceptionDao
 	 *             si une erreur survient
 	 */
-	public abstract T select(Object pUneClef, Session pSession) throws ExceptionDao;
+	public abstract T select(Object pUneClef) throws ExceptionDao;
 
 	/**
 	 * Selectionne tous les elements qui correspondent aux criteres.
@@ -101,6 +99,6 @@ public interface IDAO<T extends IEntity> {
 	 * @throws ExceptionDao
 	 *             si une erreur survient
 	 */
-	public abstract List<T> selectAll(String pAWhere, String pAnOrderBy, Session pSession) throws ExceptionDao;
+	public abstract List<T> selectAll(String pAWhere, String pAnOrderBy) throws ExceptionDao;
 
 }

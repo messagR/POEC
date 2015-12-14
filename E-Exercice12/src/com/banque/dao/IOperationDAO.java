@@ -8,8 +8,6 @@ package com.banque.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Session;
-
 import com.banque.dao.ex.ExceptionDao;
 import com.banque.entity.IOperationEntity;
 
@@ -38,6 +36,6 @@ public interface IOperationDAO extends IDAO<IOperationEntity> {
 	 *
 	 */
 	public abstract List<IOperationEntity> selectCriteria(Integer unCompteId, Date unDebut, Date uneFin,
-			Boolean pCreditDebit, Session pSession) throws ExceptionDao;
+			Boolean pCreditDebit) throws ExceptionDao;
 
 }

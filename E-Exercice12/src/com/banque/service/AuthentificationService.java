@@ -5,6 +5,9 @@
  */
 package com.banque.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.banque.dao.IUtilisateurDAO;
 import com.banque.dao.UtilisateurDAO;
 import com.banque.dao.ex.ExceptionDao;
@@ -17,8 +20,10 @@ import com.banque.service.ex.UtilisateurInconnuException;
 /**
  * Gestion de l'authentification.
  */
+@Service("authentificationService")
 public class AuthentificationService extends AbstractService implements IAuthentificationService {
 
+	@Autowired
 	private IUtilisateurDAO utilisateurDAO;
 
 	/**
@@ -59,7 +64,7 @@ public class AuthentificationService extends AbstractService implements IAuthent
 		}
 		IUtilisateurEntity resultat = null;
 		try {
-			resultat = this.getUtilisateurDAO().selectLogin(pLogin, null);
+			resultat = this.getUtilisateurDAO().selectLogin(pLogin);
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}

@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.banque.dao.CompteDAO;
 import com.banque.dao.ICompteDAO;
@@ -26,14 +28,17 @@ import com.banque.service.ex.AucunDroitException;
 import com.banque.service.ex.DecouvertException;
 import com.banque.service.ex.EntityIntrouvableException;
 import com.banque.service.ex.ErreurTechniqueException;
-import com.banque.util.HibernateSessionFactory;
 
 /**
  * Gestion des operations.
  */
+@Service("operationService")
 public class OperationService extends AbstractService implements IOperationService {
 
+	@Autowired
 	private IOperationDAO operationDao;
+
+	@Autowired
 	private ICompteDAO compteDao;
 
 	/**
@@ -99,7 +104,7 @@ public class OperationService extends AbstractService implements IOperationServi
 		// On verifie que le compte appartient bien a l'utilisateur
 		ICompteEntity compte = null;
 		try {
-			compte = this.getCompteDao().select(unCompteId, null);
+			compte = this.getCompteDao().select(unCompteId);
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}
@@ -112,7 +117,7 @@ public class OperationService extends AbstractService implements IOperationServi
 
 		IOperationEntity resultat = null;
 		try {
-			resultat = this.getOperationDao().select(uneOperationId, null);
+			resultat = this.getOperationDao().select(uneOperationId);
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}
@@ -138,7 +143,7 @@ public class OperationService extends AbstractService implements IOperationServi
 
 		ICompteEntity compte;
 		try {
-			compte = this.getCompteDao().select(unCompteId, null);
+			compte = this.getCompteDao().select(unCompteId);
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}
@@ -151,7 +156,7 @@ public class OperationService extends AbstractService implements IOperationServi
 
 		List<IOperationEntity> resultat = new ArrayList<IOperationEntity>();
 		try {
-			resultat = this.getOperationDao().selectAll("compteId=" + unCompteId, "date DESC", null);
+			resultat = this.getOperationDao().selectAll("compteId=" + unCompteId, "date DESC");
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}
@@ -162,7 +167,7 @@ public class OperationService extends AbstractService implements IOperationServi
 	@Override
 	public List<IOperationEntity> selectCritere(Integer unUtilisateurId, Integer unCompteId, Date unDebut, Date uneFin,
 			boolean pCredit, boolean pDebit) throws EntityIntrouvableException, AucunDroitException,
-					NullPointerException, ErreurTechniqueException {
+	NullPointerException, ErreurTechniqueException {
 		if (unUtilisateurId == null) {
 			throw new NullPointerException("utilisateurId");
 		}
@@ -177,7 +182,7 @@ public class OperationService extends AbstractService implements IOperationServi
 		}
 
 		try {
-			return this.getOperationDao().selectCriteria(unCompteId, unDebut, uneFin, crediDebit, null);
+			return this.getOperationDao().selectCriteria(unCompteId, unDebut, uneFin, crediDebit);
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}
@@ -186,7 +191,7 @@ public class OperationService extends AbstractService implements IOperationServi
 	@Override
 	public List<IOperationEntity> faireVirement(Integer unUtilisateurId, Integer unCompteIdSrc, Integer unCompteIdDst,
 			Double unMontant) throws EntityIntrouvableException, AucunDroitException, NullPointerException,
-					DecouvertException, ErreurTechniqueException {
+	DecouvertException, ErreurTechniqueException {
 		if (unUtilisateurId == null) {
 			throw new NullPointerException("utilisateurId");
 		}
@@ -205,11 +210,9 @@ public class OperationService extends AbstractService implements IOperationServi
 		Session lSession = null;
 		boolean doCommit = false;
 		try {
-			lSession = HibernateSessionFactory.getInstance().openSession();
-			lSession.beginTransaction();
 			ICompteEntity compteSrc = null;
 			try {
-				compteSrc = this.getCompteDao().select(unCompteIdSrc, lSession);
+				compteSrc = this.getCompteDao().select(unCompteIdSrc);
 			} catch (ExceptionDao e) {
 				throw new ErreurTechniqueException(e);
 			}
@@ -221,7 +224,7 @@ public class OperationService extends AbstractService implements IOperationServi
 			}
 			ICompteEntity compteDst = null;
 			try {
-				compteDst = this.getCompteDao().select(unCompteIdDst, lSession);
+				compteDst = this.getCompteDao().select(unCompteIdDst);
 			} catch (ExceptionDao e) {
 				throw new ErreurTechniqueException(e);
 			}
@@ -268,12 +271,12 @@ public class OperationService extends AbstractService implements IOperationServi
 			opDst.setMontant(unMontant);
 			opDst.setLibelle("Transaction avec le comte " + unCompteIdSrc);
 
-			opSrc = this.getOperationDao().insert(opSrc, lSession);
-			opDst = this.getOperationDao().insert(opDst, lSession);
+			opSrc = this.getOperationDao().insert(opSrc);
+			opDst = this.getOperationDao().insert(opDst);
 			compteSrc.setSolde(BigDecimal.valueOf(soldeSrc));
 			compteDst.setSolde(BigDecimal.valueOf(soldeDst));
-			this.getCompteDao().update(compteSrc, lSession);
-			this.getCompteDao().update(compteDst, lSession);
+			this.getCompteDao().update(compteSrc);
+			this.getCompteDao().update(compteDst);
 
 			doCommit = true;
 		} catch (ExceptionDao e) {

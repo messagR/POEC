@@ -11,16 +11,17 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.banque.dao.ex.ExceptionDao;
 import com.banque.entity.IEntity;
-import com.banque.util.HibernateSessionFactory;
 
 /**
  * DAO standard.
@@ -28,9 +29,13 @@ import com.banque.util.HibernateSessionFactory;
  * @param <T>
  *            la cible du DAO
  */
+@Repository("abstactDAO")
 abstract class AbstractDAO<T extends IEntity> implements IDAO<T> {
 
 	protected Log LOG = LogFactory.getLog(this.getClass());
+
+	@Autowired
+	private SessionFactory sessionFactory;
 
 	/**
 	 * Constructeur de l'objet.
@@ -39,147 +44,79 @@ abstract class AbstractDAO<T extends IEntity> implements IDAO<T> {
 		super();
 	}
 
+	public SessionFactory getSessionFactory() {
+		return this.sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@Override
-	public T insert(T uneEntite, Session pSession) throws ExceptionDao {
+	public T insert(T uneEntite) throws ExceptionDao {
 		if (uneEntite == null) {
 			return null;
 		}
-		boolean doCommit = false;
-		boolean pSessionCreated = pSession == null;
 		try {
-			if (pSessionCreated) {
-				pSession = HibernateSessionFactory.getInstance().openSession();
-				pSession.beginTransaction();
-			}
+			Session pSession = this.getSessionFactory().getCurrentSession();
 			pSession.save(uneEntite);
-			doCommit = true;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			throw new ExceptionDao(e);
-		} finally {
-			if (pSessionCreated && (pSession != null)) {
-				if (doCommit) {
-					pSession.getTransaction().commit();
-				} else {
-					pSession.getTransaction().rollback();
-				}
-				try {
-					pSession.close();
-				} catch (HibernateException e) {
-					this.LOG.error("Impossible de fermer la pSession!", e);
-				}
-			}
 		}
 
 		return uneEntite;
 	}
 
 	@Override
-	public T update(T uneEntite, Session pSession) throws ExceptionDao {
+	public T update(T uneEntite) throws ExceptionDao {
 		if (uneEntite == null) {
 			return null;
 		}
-		boolean doCommit = false;
-		boolean pSessionCreated = pSession == null;
 		try {
-			if (pSessionCreated) {
-				pSession = HibernateSessionFactory.getInstance().openSession();
-				pSession.beginTransaction();
-			}
+			Session pSession = this.getSessionFactory().getCurrentSession();
 
 			pSession.evict(uneEntite);
 			pSession.refresh(uneEntite, LockOptions.READ);
 			pSession.update(uneEntite);
-			doCommit = true;
 		} catch (Exception e) {
 			throw new ExceptionDao(e);
-		} finally {
-			if (pSessionCreated && (pSession != null)) {
-				if (doCommit) {
-					pSession.getTransaction().commit();
-				} else {
-					pSession.getTransaction().rollback();
-				}
-				try {
-					pSession.close();
-				} catch (HibernateException e) {
-					this.LOG.error("Impossible de fermer la pSession!", e);
-				}
-			}
 		}
 
 		return uneEntite;
 	}
 
 	@Override
-	public boolean delete(T pUneEntite, Session pSession) throws ExceptionDao {
+	public boolean delete(T pUneEntite) throws ExceptionDao {
 		if (pUneEntite == null) {
 			return false;
 		}
 		if (pUneEntite.getId() == null) {
 			throw new ExceptionDao("L'entite n'a pas d'ID");
 		}
-		boolean doCommit = false;
-		boolean pSessionCreated = pSession == null;
 		try {
-			if (pSessionCreated) {
-				pSession = HibernateSessionFactory.getInstance().openSession();
-				pSession.beginTransaction();
-			}
+			Session pSession = this.getSessionFactory().getCurrentSession();
 			pSession.delete(pUneEntite);
-			doCommit = true;
 		} catch (Exception e) {
 			throw new ExceptionDao(e);
-		} finally {
-			if (pSessionCreated && (pSession != null)) {
-				if (doCommit) {
-					pSession.getTransaction().commit();
-				} else {
-					pSession.getTransaction().rollback();
-				}
-				try {
-					pSession.close();
-				} catch (HibernateException e) {
-					this.LOG.error("Impossible de fermer la pSession!", e);
-				}
-			}
 		}
 
-		return doCommit;
+		return true;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public T select(Object pUneClef, Session pSession) throws ExceptionDao {
+	public T select(Object pUneClef) throws ExceptionDao {
 
 		List<T> resu = null;
-		boolean pSessionCreated = pSession == null;
-		boolean doCommit = false;
 
 		try {
-			if (pSessionCreated) {
-				pSession = HibernateSessionFactory.getInstance().openSession();
-				pSession.beginTransaction();
-			}
+			Session pSession = this.getSessionFactory().getCurrentSession();
 			DetachedCriteria detachedCriteria = DetachedCriteria.forEntityName(this.getEntityClassName());
 			detachedCriteria.add(Restrictions.eq(this.getPkName(), pUneClef));
 			Criteria executableCriteria = detachedCriteria.getExecutableCriteria(pSession);
 			resu = executableCriteria.list();
-			doCommit = true;
 		} catch (Exception e) {
 			throw new ExceptionDao(e);
-		} finally {
-			if (pSessionCreated && (pSession != null)) {
-				if (doCommit) {
-					pSession.getTransaction().commit();
-				} else {
-					pSession.getTransaction().rollback();
-				}
-				try {
-					pSession.close();
-				} catch (HibernateException e) {
-					this.LOG.error("Impossible de fermer la pSession!", e);
-				}
-			}
 		}
 		if (resu != null) {
 			return resu.iterator().next();
@@ -189,16 +126,11 @@ abstract class AbstractDAO<T extends IEntity> implements IDAO<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> selectAll(String pAWhere, String pAnOrderBy, Session pSession) throws ExceptionDao {
+	public List<T> selectAll(String pAWhere, String pAnOrderBy) throws ExceptionDao {
 		List<T> result = new ArrayList<T>();
-		boolean pSessionCreated = pSession == null;
-		boolean doCommit = false;
 
 		try {
-			if (pSessionCreated) {
-				pSession = HibernateSessionFactory.getInstance().openSession();
-				pSession.beginTransaction();
-			}
+			Session pSession = this.getSessionFactory().getCurrentSession();
 			Query queryObject = null;
 			StringBuffer request = new StringBuffer();
 			request.append("select entity from ").append(this.getEntityClassName());
@@ -217,22 +149,8 @@ abstract class AbstractDAO<T extends IEntity> implements IDAO<T> {
 
 			queryObject = pSession.createQuery(request.toString());
 			result.addAll(queryObject.list());
-			doCommit = true;
 		} catch (Exception e) {
 			throw new ExceptionDao(e);
-		} finally {
-			if (pSessionCreated && (pSession != null)) {
-				if (doCommit) {
-					pSession.getTransaction().commit();
-				} else {
-					pSession.getTransaction().rollback();
-				}
-				try {
-					pSession.close();
-				} catch (HibernateException e) {
-					this.LOG.error("Impossible de fermer la pSession!", e);
-				}
-			}
 		}
 		return result;
 	}

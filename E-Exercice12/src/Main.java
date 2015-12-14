@@ -9,15 +9,13 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.banque.entity.ICompteEntity;
 import com.banque.entity.IUtilisateurEntity;
-import com.banque.service.AuthentificationService;
-import com.banque.service.CompteService;
 import com.banque.service.IAuthentificationService;
 import com.banque.service.ICompteService;
 import com.banque.service.IOperationService;
-import com.banque.service.OperationService;
 
 /**
  * Exemple.
@@ -36,17 +34,23 @@ public final class Main {
 		if (Main.LOG.isInfoEnabled()) {
 			Main.LOG.info("-- Debut -- ");
 		}
+		ClassPathXmlApplicationContext appContext = null;
+
 		try {
+			// Chargement du fichier
+			appContext = new ClassPathXmlApplicationContext("*-context.xml");
+
 			// On instancie le service authentification afin de récupérer un
 			// utilisateur
-			IAuthentificationService serviceAuth = new AuthentificationService();
+			IAuthentificationService serviceAuth = appContext.getBean("authentificationService",
+					IAuthentificationService.class);
 			IUtilisateurEntity utilisateur = serviceAuth.authentifier("dj", "dj");
 			if (Main.LOG.isInfoEnabled()) {
 				Main.LOG.info("Bonjour " + utilisateur.getNom() + " " + utilisateur.getPrenom());
 			}
 			// On instancie le service de gestion des comptes pour recuperer la
 			// liste de ses comptes
-			ICompteService serviceCpt = new CompteService();
+			ICompteService serviceCpt = appContext.getBean("compteService", ICompteService.class);
 			List<ICompteEntity> listeCpts = serviceCpt.selectAll(utilisateur.getId());
 			if (Main.LOG.isInfoEnabled()) {
 				Main.LOG.info("Vous avez " + listeCpts.size() + " comptes");
@@ -63,7 +67,7 @@ public final class Main {
 
 			// On Effectue un virement entre deux comptes, via le service des
 			// operations
-			IOperationService serviceOp = new OperationService();
+			IOperationService serviceOp = appContext.getBean("operationService", IOperationService.class);
 			serviceOp.faireVirement(utilisateur.getId(), deuxId[0], deuxId[1], Double.valueOf(5));
 			if (Main.LOG.isInfoEnabled()) {
 				Main.LOG.info("Votre virement s'est bien effectué");

@@ -10,18 +10,18 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import com.banque.dao.ex.ExceptionDao;
 import com.banque.entity.IOperationEntity;
 import com.banque.entity.OperationEntity;
-import com.banque.util.HibernateSessionFactory;
 
 /**
  * Gestion des operations.
  */
+@Repository("operationDAO")
 public class OperationDAO extends AbstractDAO<IOperationEntity> implements IOperationDAO {
 
 	/**
@@ -43,18 +43,13 @@ public class OperationDAO extends AbstractDAO<IOperationEntity> implements IOper
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<IOperationEntity> selectCriteria(Integer unCompteId, Date unDebut, Date uneFin, Boolean pCreditDebit,
-			Session pSession) throws ExceptionDao {
+	public List<IOperationEntity> selectCriteria(Integer unCompteId, Date unDebut, Date uneFin, Boolean pCreditDebit)
+			throws ExceptionDao {
 
 		List<IOperationEntity> result = new ArrayList<IOperationEntity>();
-		boolean pSessionCreated = pSession == null;
-		boolean doCommit = false;
 
 		try {
-			if (pSessionCreated) {
-				pSession = HibernateSessionFactory.getInstance().openSession();
-				pSession.beginTransaction();
-			}
+			Session pSession = this.getSessionFactory().getCurrentSession();
 			Query queryObject = null;
 			StringBuffer request = new StringBuffer();
 			request.append("select entity from ").append(this.getEntityClassName());
@@ -99,22 +94,8 @@ public class OperationDAO extends AbstractDAO<IOperationEntity> implements IOper
 			}
 
 			result.addAll(queryObject.list());
-			doCommit = true;
 		} catch (Exception e) {
 			throw new ExceptionDao(e);
-		} finally {
-			if (pSessionCreated && (pSession != null)) {
-				if (doCommit) {
-					pSession.getTransaction().commit();
-				} else {
-					pSession.getTransaction().rollback();
-				}
-				try {
-					pSession.close();
-				} catch (HibernateException e) {
-					this.LOG.error("Impossible de fermer la pSession!", e);
-				}
-			}
 		}
 		return result;
 	}

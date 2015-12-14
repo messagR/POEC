@@ -8,6 +8,9 @@ package com.banque.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.banque.dao.CompteDAO;
 import com.banque.dao.ICompteDAO;
 import com.banque.dao.ex.ExceptionDao;
@@ -19,8 +22,10 @@ import com.banque.service.ex.ErreurTechniqueException;
 /**
  * Gestion des comptes.
  */
+@Service("compteService")
 public class CompteService extends AbstractService implements ICompteService {
 
+	@Autowired
 	private ICompteDAO compteDao;
 
 	/**
@@ -61,7 +66,7 @@ public class CompteService extends AbstractService implements ICompteService {
 		}
 		ICompteEntity resultat = null;
 		try {
-			resultat = this.getCompteDao().select(unCompteId, null);
+			resultat = this.getCompteDao().select(unCompteId);
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}
@@ -84,8 +89,7 @@ public class CompteService extends AbstractService implements ICompteService {
 		}
 		List<ICompteEntity> resultat = new ArrayList<ICompteEntity>();
 		try {
-			resultat = this.getCompteDao().selectAll("entity.utilisateurId=" + unUtilisateurId, "entity.libelle ASC",
-					null);
+			resultat = this.getCompteDao().selectAll("entity.utilisateurId=" + unUtilisateurId, "entity.libelle ASC");
 		} catch (ExceptionDao e) {
 			throw new ErreurTechniqueException(e);
 		}

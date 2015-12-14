@@ -255,9 +255,9 @@ IOperationService {
 
 			opSrc = this.getOperationDao().insert(opSrc);
 			opDst = this.getOperationDao().insert(opDst);
-			if (true) {
-				throw new ExceptionDao("");
-			}
+			// if (true) {
+			// throw new ExceptionDao("");
+			// }
 			compteSrc.setSolde(Double.valueOf(soldeSrc));
 			compteDst.setSolde(Double.valueOf(soldeDst));
 			this.getCompteDao().update(compteSrc);
