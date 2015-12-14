@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.banque.entity.OperationEntity" table="operation"
+		catalog="banque" optimistic-lock="version">
+		<id name="id" type="java.lang.Integer">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+		<property name="libelle" type="string">
+			<column name="libelle" length="250" />
+		</property>
+		<property name="montant" type="java.lang.Double">
+			<column name="montant" precision="22" scale="0" />
+		</property>
+		<property name="date" type="timestamp">
+			<column name="date" length="19" />
+		</property>
+
+		<property name="compteId" type="integer" not-null="true">
+			<column name="compteId" sql-type="integer" />
+		</property>
+	</class>
+</hibernate-mapping>

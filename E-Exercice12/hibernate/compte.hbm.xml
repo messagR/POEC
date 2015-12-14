@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.banque.entity.CompteEntity" table="compte"
+		catalog="banque" optimistic-lock="version">
+		<id name="id" type="java.lang.Integer">
+			<column name="id" />
+			<generator class="native" />
+		</id>
+
+		<property name="libelle" type="string">
+			<column name="libelle" length="250" />
+		</property>
+		<property name="solde" type="big_decimal">
+			<column name="solde" precision="10" />
+		</property>
+		<property name="decouvert" type="big_decimal">
+			<column name="decouvert" precision="10" />
+		</property>
+		<property name="taux" type="big_decimal">
+			<column name="taux" precision="5" />
+		</property>
+
+		<property name="utilisateurId" type="integer" not-null="true">
+			<column name="utilisateurId" sql-type="integer" />
+		</property>
+
+	</class>
+</hibernate-mapping>
